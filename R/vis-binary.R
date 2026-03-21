@@ -1,13 +1,10 @@
 #' Visualise binary values
 #'
 #'
-#' @param data a data.frame
-#' @param col_zero colour for zeroes, default is "salmon"
-#' @param col_one colour for ones, default is "steelblue2"
-#' @param col_na colour for NA, default is "grey90"
-#' @param order optional character vector of the order of variables
+#' @param data A \code{data.frame} object.
+#' @param ... Extra arguments passed to methods.
 #'
-#' @return a ggplot plot of the binary values
+#' @return A \code{ggplot2} plot of the binary values.
 #'
 #' @examples
 #' vis_binary(dat_bin)
@@ -24,6 +21,12 @@
 #' @export
 vis_binary <- function(data, ...) UseMethod("vis_binary")
 
+#' @rdname vis_binary
+#' @param col_zero Character string specifying the colour for zeroes, default is "salmon".
+#' @param col_one Character string specifying the colour for ones, default is "steelblue2".
+#' @param col_na Character string specifying the colour for NA, default is "grey90".
+#' @param order Optional character vector of the order of variables.
+#' @param transpose Logical indicating whether to transpose the plot, default is FALSE.
 #' @export
 vis_binary.data.frame <- function(data,
                                   col_zero = "salmon",

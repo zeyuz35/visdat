@@ -2,23 +2,38 @@
 % Please edit documentation in R/vis-binary.R
 \name{vis_binary}
 \alias{vis_binary}
+\alias{vis_binary.data.frame}
 \title{Visualise binary values}
 \usage{
 vis_binary(data, ...)
+
+\method{vis_binary}{data.frame}(
+  data,
+  col_zero = "salmon",
+  col_one = "steelblue2",
+  col_na = "grey90",
+  order = NULL,
+  transpose = FALSE,
+  ...
+)
 }
 \arguments{
-\item{data}{a data.frame}
+\item{data}{A \code{data.frame} object.}
 
-\item{col_zero}{colour for zeroes, default is "salmon"}
+\item{...}{Extra arguments passed to methods.}
 
-\item{col_one}{colour for ones, default is "steelblue2"}
+\item{col_zero}{Character string specifying the colour for zeroes, default is "salmon".}
 
-\item{col_na}{colour for NA, default is "grey90"}
+\item{col_one}{Character string specifying the colour for ones, default is "steelblue2".}
 
-\item{order}{optional character vector of the order of variables}
+\item{col_na}{Character string specifying the colour for NA, default is "grey90".}
+
+\item{order}{Optional character vector of the order of variables.}
+
+\item{transpose}{Logical indicating whether to transpose the plot, default is FALSE.}
 }
 \value{
-a ggplot plot of the binary values
+A \code{ggplot2} plot of the binary values.
 }
 \description{
 Visualise binary values
