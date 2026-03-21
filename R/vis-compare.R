@@ -20,8 +20,10 @@
 #' aq_diff[1:10, 1:2] <- NA
 #' vis_compare(airquality, aq_diff)
 #' @export
-vis_compare <- function(df1,
-                        df2){
+vis_compare <- function(df1, df2, ...) UseMethod("vis_compare")
+
+#' @export
+vis_compare.data.frame <- function(df1, df2, transpose = FALSE, ...){
 
   # could add a parameter, sort_match, to help with
   # sort_match logical TRUE/FALSE.
@@ -53,37 +55,114 @@ vis_compare <- function(df1,
                   value_df2 = vis_extract_value_(df2))
 
   # then we plot it
-  ggplot2::ggplot(data = d,
-                  ggplot2::aes(
-                    x = variable,
-                    y = rows)) +
-                    # text assists with plotly mouseover
-                    # text = c("value_df1", "value_df2"))) +
-    # this test code has been removed as ggplot2 version 3.0.0
-    # breaks.
-    # Logged in issue https://github.com/ropensci/visdat/issues/89
-
+  vis_compare_plot <- ggplot2::ggplot(data = d,
+                                      ggplot2::aes(
+                                        x = variable,
+                                        y = rows)) +
     ggplot2::geom_raster(ggplot2::aes(fill = valueType)) +
     ggplot2::theme_minimal() +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45,
-                                     vjust = 1,
-                                     hjust = 1)) +
+                                                       vjust = 1,
+                                                       hjust = 1)) +
     ggplot2::labs(x = "",
-         y = "Observations",
-         # this prevents it from being used in the boilerplate
-         fill = "Cell Type") +
+                  y = "Observations",
+                  fill = "Cell Type") +
     ggplot2::scale_fill_manual(limits = c("same",
-                                 "different"),
-                      breaks = c("same", # red
-                                 "different"), # dark blue
-                      values = c("#fc8d59", # Orange
-                                 "#91bfdb"), # blue
-                      na.value = "grey") +
-  # flip the axes
-  ggplot2::scale_y_reverse() +
-  ggplot2::theme(axis.text.x = ggplot2::element_text(hjust = 0.25)) +
-    ggplot2::scale_x_discrete(position = "top",
-                              limits = names(df_diff))
+                                          "different"),
+                               breaks = c("same",
+                                          "different"),
+                               values = c("#fc8d59",
+                                          "#91bfdb"),
+                               na.value = "grey") +
+    ggplot2::guides(fill = ggplot2::guide_legend(reverse = TRUE, title = "Cell Type"))
+
+  row_labels <- attr(df1, "row_labels")
+  
+  if (!is.null(row_labels)) {
+    vis_compare_plot$data$time <- as.Date(row_labels[vis_compare_plot$data$rows])
+    vis_compare_plot$layers[[1]] <- NULL
+    
+    vis_compare_plot <- vis_compare_plot +
+      ggplot2::geom_tile(ggplot2::aes(x = variable, y = time, fill = valueType)) +
+      ggplot2::scale_y_date(expand = c(0, 0)) +
+      ggplot2::scale_x_discrete(position = ifelse(transpose, "bottom", "top"), limits = if(transpose) rev(names(df_diff)) else names(df_diff)) +
+      ggplot2::theme(axis.text.x = ggplot2::element_text(hjust = 0.25))
+      
+    if (transpose) {
+      vis_compare_plot <- vis_compare_plot + ggplot2::coord_flip()
+    } else {
+      vis_compare_plot <- vis_compare_plot + ggplot2::coord_trans(y = "reverse")
+    }
+    vis_compare_plot <- vis_compare_plot + 
+      ggplot2::labs(x = if(transpose) "Time" else "Series", y = if(transpose) "Series" else "Time")
+  } else {
+    vis_compare_plot <- vis_compare_plot +
+      ggplot2::scale_x_discrete(position = ifelse(transpose, "bottom", "top"), limits = if(transpose) rev(names(df_diff)) else names(df_diff)) +
+      ggplot2::theme(axis.text.x = ggplot2::element_text(hjust = 0.25))
+
+    if (transpose) {
+      vis_compare_plot <- vis_compare_plot + 
+        ggplot2::coord_flip() + 
+        ggplot2::scale_y_continuous() +
+        ggplot2::labs(x = "Observations", y = "")
+    } else {
+      vis_compare_plot <- vis_compare_plot + 
+        ggplot2::scale_y_reverse() +
+        ggplot2::labs(x = "", y = "Observations")
+    }
+  }
+
+  vis_compare_plot
+}
+
+# Time series methods: convert via tsbox to transposed data.frame, then dispatch.
+#' @export
+vis_compare.ts <- function(df1, df2, ...) {
+  y1 <- ts_to_df(df1)
+  y2 <- ts_to_df(df2)
+  vis_compare.data.frame(y1, y2, ...)
+}
+
+#' @export
+vis_compare.mts <- function(df1, df2, ...) {
+  vis_compare.data.frame(ts_to_df(df1), ts_to_df(df2), ...)
+}
+
+#' @export
+vis_compare.zoo <- function(df1, df2, ...) {
+  vis_compare.data.frame(ts_to_df(df1), ts_to_df(df2), ...)
+}
+
+#' @export
+vis_compare.xts <- function(df1, df2, ...) {
+  vis_compare.data.frame(ts_to_df(df1), ts_to_df(df2), ...)
+}
+
+#' @export
+vis_compare.tbl_ts <- function(df1, df2, ...) {
+  vis_compare.data.frame(ts_to_df(df1), ts_to_df(df2), ...)
+}
+
+#' @export
+vis_compare.tbl_df <- function(df1, df2, ...) {
+  vis_compare.data.frame(as.data.frame(df1), as.data.frame(df2), ...)
+}
+
+#' @export
+vis_compare.tsibble <- function(df1, df2, ...) {
+  vis_compare.data.frame(ts_to_df(df1), ts_to_df(df2), ...)
+}
+
+#' @export
+vis_compare.default <- function(df1, df2, ...) {
+  if (tsbox::ts_boxable(df1) && tsbox::ts_boxable(df2)) {
+    vis_compare.data.frame(ts_to_df(df1), ts_to_df(df2), ...)
+  } else {
+    stop(
+      "vis_compare requires data.frames or supported time series objects",
+      call. = FALSE
+    )
+  }
 }
 
 #' (Internal) A utility function for `vis_compare`

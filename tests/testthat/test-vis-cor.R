@@ -17,10 +17,9 @@ test_that("vis_cor sends an error when used with the wrong data",{
 })
 
 test_that("vis_cor fails when an object of the wrong class is provided", {
-  expect_snapshot(
-    error = TRUE,
-    vis_cor(AirPassengers)
-    )
+  # AirPassengers now dispatches via vis_cor.ts, so it should succeed
+  p <- vis_cor(AirPassengers)
+  expect_s3_class(p, "ggplot")
 })
 
 vis_cor_facet <- vis_cor(airquality, facet = Month)

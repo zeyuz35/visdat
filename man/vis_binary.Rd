@@ -4,13 +4,7 @@
 \alias{vis_binary}
 \title{Visualise binary values}
 \usage{
-vis_binary(
-  data,
-  col_zero = "salmon",
-  col_one = "steelblue2",
-  col_na = "grey90",
-  order = NULL
-)
+vis_binary(data, ...)
 }
 \arguments{
 \item{data}{a data.frame}

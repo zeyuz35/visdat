@@ -17,11 +17,10 @@ test_that("vis_miss creates the right plot",{
   vdiffr::expect_doppelganger("vis_miss no show percent in columns", vis_miss_plot_show_perc_col_t)
 })
 
-test_that("vis_miss fails when an object of the wrong class is provided", {
-  expect_snapshot(
-    error = TRUE,
-    vis_miss(AirPassengers)
-    )
+test_that("vis_miss accepts ts objects via S3 dispatch", {
+  # AirPassengers dispatches via vis_miss.ts
+  p <- vis_miss(AirPassengers)
+  expect_s3_class(p, "ggplot")
 })
 
 library(dplyr)

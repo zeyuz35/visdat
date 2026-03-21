@@ -4,7 +4,7 @@
 \alias{vis_value}
 \title{Visualise the value of data values}
 \usage{
-vis_value(data, na_colour = "grey90", viridis_option = "D")
+vis_value(data, ...)
 }
 \arguments{
 \item{data}{a data.frame}

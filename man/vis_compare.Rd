@@ -4,7 +4,7 @@
 \alias{vis_compare}
 \title{Visually compare two dataframes and see where they are different.}
 \usage{
-vis_compare(df1, df2)
+vis_compare(df1, df2, ...)
 }
 \arguments{
 \item{df1}{The first dataframe to compare}

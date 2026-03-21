@@ -21,17 +21,18 @@ test_that("vis_compare will not accept two dataframes of differing dims",{
     )
 })
 
-test_that("vis_compare fails when an object of the wrong class is provided", {
-  expect_snapshot(
-    error = TRUE,
-    vis_compare(iris, AirPassengers)
-    )
-  expect_snapshot(
-    error = TRUE,
-    vis_compare(AirPassengers, iris)
-    )
-  expect_snapshot(
-    error = TRUE,
-    vis_compare(AirPassengers, AirPassengers)
-    )
+test_that("vis_compare accepts ts objects via S3 dispatch", {
+  skip_if_not_installed("vars")
+  canada_diff <- vars::Canada
+  canada_diff[1:5, 1:2] <- NA
+  p <- vis_compare(vars::Canada, canada_diff)
+  expect_s3_class(p, "ggplot")
 })
+
+test_that("vis_compare fails when one arg is not a ts-boxable object", {
+  expect_error(
+    vis_compare(iris, AirPassengers),
+    regexp = NULL
+  )
+})
+

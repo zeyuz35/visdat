@@ -1,13 +1,3 @@
-# vis_miss fails when an object of the wrong class is provided
-
-    Code
-      vis_miss(AirPassengers)
-    Condition
-      Error in `test_if_dataframe()`:
-      ! `vis_dat()` requires a <data.frame>
-      the object I see has class(es):
-      <ts>
-
 # vis_miss correctly see missings in columns labels
 
     Code

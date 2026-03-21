@@ -2,8 +2,8 @@
 % Please edit documentation in R/visdat-package.r
 \docType{package}
 \name{visdat}
-\alias{visdat}
 \alias{visdat-package}
+\alias{visdat}
 \title{visdat}
 \description{
 visdat is a package that helps with the preliminary visualisation of data.

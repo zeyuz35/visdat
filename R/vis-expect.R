@@ -57,7 +57,10 @@
 #' vis_expect(dat_ms, ~.x %in% common_nas)
 #'
 #'
-vis_expect <- function(data, expectation, show_perc = TRUE){
+vis_expect <- function(data, ...) UseMethod("vis_expect")
+
+#' @export
+vis_expect.data.frame <- function(data, expectation, show_perc = TRUE, transpose = FALSE, ...){
 
   test_if_dataframe(data)
 
@@ -95,36 +98,122 @@ vis_expect <- function(data, expectation, show_perc = TRUE){
   data_expect <- data_expect %>%
     dplyr::mutate(variable = factor(variable, levels = colnames_data))
 
-  vis_expect_plot <- data_expect %>%
-    ggplot2::ggplot(ggplot2::aes(x = variable,
-                                 y = rows)) +
-    ggplot2::geom_raster(ggplot2::aes(fill = valueType)) +
-    ggplot2::theme_minimal() +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45,
-                                                       vjust = 1,
-                                                       hjust = 1)) +
-    ggplot2::labs(x = "",
-                  y = "Observations") +
-  # flip the axes
-    ggplot2::scale_y_reverse() +
-    ggplot2::scale_x_discrete(position = "top") +
-    ggplot2::scale_fill_manual(name = "",
-                               values = c("#998ec3", # purple
-                                          "#f1a340", # orange
-                                          "grey"),
-                               labels = c(p_expect_false_lab,
-                                          p_expect_true_lab),
-                               na.value = "#E5E5E5") + # light gray
-    ggplot2::guides(fill = ggplot2::guide_legend(reverse = TRUE)) +
-    # change the limits etc.
-    ggplot2::guides(fill = ggplot2::guide_legend(title = "Expectation")) +
-    # add info about the axes
-    ggplot2::theme(legend.position = "bottom") +
-    # ggplot2::theme(axis.text.x = ggplot2::element_text(hjust = 0.5)) +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(hjust = 0))
+  row_labels <- attr(data, "row_labels")
+  
+  if (!is.null(row_labels)) {
+    data_expect$time <- as.Date(row_labels[data_expect$rows])
+    
+    vis_expect_plot <- data_expect %>%
+      ggplot2::ggplot(ggplot2::aes(x = variable,
+                                   y = time)) +
+      ggplot2::geom_tile(ggplot2::aes(fill = valueType)) +
+      ggplot2::theme_minimal() +
+      ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45,
+                                                         vjust = 1,
+                                                         hjust = 1)) +
+      ggplot2::scale_y_date(expand = c(0, 0)) +
+      ggplot2::scale_x_discrete(position = ifelse(transpose, "bottom", "top"), limits = if(transpose) rev(colnames_data) else colnames_data) +
+      ggplot2::scale_fill_manual(name = "",
+                                 values = c("#998ec3", # purple
+                                            "#f1a340", # orange
+                                            "grey"),
+                                 labels = c(p_expect_false_lab,
+                                            p_expect_true_lab),
+                                 na.value = "#E5E5E5") + # light gray
+      ggplot2::guides(fill = ggplot2::guide_legend(reverse = TRUE, title = "Expectation")) +
+      ggplot2::theme(legend.position = "bottom", axis.text.x = ggplot2::element_text(hjust = 0))
+
+    if (transpose) {
+      vis_expect_plot <- vis_expect_plot + ggplot2::coord_flip()
+    } else {
+      vis_expect_plot <- vis_expect_plot + ggplot2::coord_trans(y = "reverse")
+    }
+
+    vis_expect_plot <- vis_expect_plot + 
+      ggplot2::labs(x = if(transpose) "Time" else "Series", y = if(transpose) "Series" else "Time")
+  } else {
+    vis_expect_plot <- data_expect %>%
+      ggplot2::ggplot(ggplot2::aes(x = variable,
+                                   y = rows)) +
+      ggplot2::geom_raster(ggplot2::aes(fill = valueType)) +
+      ggplot2::theme_minimal() +
+      ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45,
+                                                         vjust = 1,
+                                                         hjust = 1)) +
+      ggplot2::scale_x_discrete(position = ifelse(transpose, "bottom", "top"), limits = if(transpose) rev(colnames_data) else colnames_data) +
+      ggplot2::scale_fill_manual(name = "",
+                                 values = c("#998ec3", # purple
+                                            "#f1a340", # orange
+                                            "grey"),
+                                 labels = c(p_expect_false_lab,
+                                            p_expect_true_lab),
+                                 na.value = "#E5E5E5") + # light gray
+      ggplot2::guides(fill = ggplot2::guide_legend(reverse = TRUE, title = "Expectation")) +
+      ggplot2::theme(legend.position = "bottom", axis.text.x = ggplot2::element_text(hjust = 0))
+
+    if (transpose) {
+      vis_expect_plot <- vis_expect_plot + 
+        ggplot2::coord_flip() + 
+        ggplot2::scale_y_continuous() +
+        ggplot2::labs(x = "Observations", y = "")
+    } else {
+      vis_expect_plot <- vis_expect_plot + 
+        ggplot2::scale_y_reverse() +
+        ggplot2::labs(x = "", y = "Observations")
+    }
+  }
 
   vis_expect_plot
 
+}
+
+# Time series methods: convert via tsbox to transposed data.frame, then dispatch.
+#' @export
+vis_expect.ts <- function(data, ...) {
+  y <- ts_to_df(data)
+  vis_expect.data.frame(y, ...)
+}
+
+#' @export
+vis_expect.mts <- function(data, ...) {
+  vis_expect.data.frame(ts_to_df(data), ...)
+}
+
+#' @export
+vis_expect.zoo <- function(data, ...) {
+  vis_expect.data.frame(ts_to_df(data), ...)
+}
+
+#' @export
+vis_expect.xts <- function(data, ...) {
+  vis_expect.data.frame(ts_to_df(data), ...)
+}
+
+#' @export
+vis_expect.tbl_ts <- function(data, ...) {
+  vis_expect.data.frame(ts_to_df(data), ...)
+}
+
+#' @export
+vis_expect.tbl_df <- function(data, ...) {
+  vis_expect.data.frame(as.data.frame(data), ...)
+}
+
+#' @export
+vis_expect.tsibble <- function(data, ...) {
+  vis_expect.data.frame(ts_to_df(data), ...)
+}
+
+#' @export
+vis_expect.default <- function(data, ...) {
+  if (tsbox::ts_boxable(data)) {
+    vis_expect.data.frame(ts_to_df(data), ...)
+  } else {
+    stop(
+      "vis_expect requires a data.frame or supported time series object",
+      call. = FALSE
+    )
+  }
 }
 
 #' Create a dataframe to help visualise 'expected' values

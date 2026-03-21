@@ -43,7 +43,10 @@
 #'                        var3 = sample(messy_vector))
 #' vis_guess(messy_df)
 #' @export
-vis_guess <- function(x, palette = "default"){
+vis_guess <- function(x, ...) UseMethod("vis_guess")
+
+#' @export
+vis_guess.data.frame <- function(x, palette = "default", transpose = FALSE, ...){
 
   test_if_dataframe(x)
 
@@ -56,16 +59,97 @@ vis_guess <- function(x, palette = "default"){
 
   # add the boilerplate information
   vis_plot <- vis_create_(d) +
-      ggplot2::guides(fill = ggplot2::guide_legend(title = "Type")) +
-      # flip the axes, add info for axes
-      ggplot2::scale_x_discrete(position = "top",
-                                limits = names(x)) +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(hjust = 0))
+      ggplot2::guides(fill = ggplot2::guide_legend(title = "Type"))
+      
+  row_labels <- attr(x, "row_labels")
+
+  if (!is.null(row_labels)) {
+    # For time series, map series to x-axis and time to y-axis.
+    vis_plot$data$time <- as.Date(row_labels[vis_plot$data$rows])
+    
+    # Remove geom_raster layer to prevent uneven spacing warnings, use geom_tile instead
+    vis_plot$layers[[1]] <- NULL
+    
+    vis_plot <- vis_plot +
+      ggplot2::geom_tile(ggplot2::aes(x = variable, y = time, fill = valueType)) +
+      ggplot2::scale_y_date(expand = c(0, 0)) +
+      ggplot2::scale_x_discrete(position = ifelse(transpose, "bottom", "top"), limits = if(transpose) rev(names(x)) else names(x)) +
+      ggplot2::theme(axis.text.x = ggplot2::element_text(hjust = 0))
+      
+    if (transpose) {
+      vis_plot <- vis_plot + ggplot2::coord_flip()
+    } else {
+      vis_plot <- vis_plot + ggplot2::coord_trans(y = "reverse")
+    }
+    
+    vis_plot <- vis_plot + 
+      ggplot2::labs(x = if(transpose) "Time" else "Series", y = if(transpose) "Series" else "Time")
+  } else {
+    vis_plot <- vis_plot +
+      ggplot2::scale_x_discrete(position = ifelse(transpose, "bottom", "top"), limits = if(transpose) rev(names(x)) else names(x)) +
+      ggplot2::theme(axis.text.x = ggplot2::element_text(hjust = 0))
+
+    if (transpose) {
+      vis_plot <- vis_plot + 
+        ggplot2::coord_flip() + 
+        ggplot2::scale_y_continuous() +
+        ggplot2::labs(x = "Observations", y = "")
+    }
+  }
 
   # specify a palette ----------------------------------------------------------
   add_vis_dat_pal(vis_plot, palette)
 
 } # close function
+
+# Time series methods: convert via tsbox to transposed data.frame, then dispatch.
+#' @export
+vis_guess.ts <- function(x, ...) {
+  y <- ts_to_df(x)
+  vis_guess.data.frame(y, ...)
+}
+
+#' @export
+vis_guess.mts <- function(x, ...) {
+  vis_guess.data.frame(ts_to_df(x), ...)
+}
+
+#' @export
+vis_guess.zoo <- function(x, ...) {
+  vis_guess.data.frame(ts_to_df(x), ...)
+}
+
+#' @export
+vis_guess.xts <- function(x, ...) {
+  vis_guess.data.frame(ts_to_df(x), ...)
+}
+
+#' @export
+vis_guess.tbl_ts <- function(x, ...) {
+  vis_guess.data.frame(ts_to_df(x), ...)
+}
+
+#' @export
+vis_guess.tbl_df <- function(x, ...) {
+  vis_guess.data.frame(as.data.frame(x), ...)
+}
+
+#' @export
+vis_guess.tsibble <- function(x, ...) {
+  vis_guess.data.frame(ts_to_df(x), ...)
+}
+
+#' @export
+vis_guess.default <- function(x, ...) {
+  if (tsbox::ts_boxable(x)) {
+    vis_guess.data.frame(ts_to_df(x), ...)
+  } else {
+    stop(
+      "vis_guess requires a data.frame or supported time series object",
+      call. = FALSE
+    )
+  }
+}
 
 #' (Internal) Guess the type of each individual cell in a dataframe
 #'

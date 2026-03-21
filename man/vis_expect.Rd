@@ -4,7 +4,7 @@
 \alias{vis_expect}
 \title{Visualise whether a value is in a data frame}
 \usage{
-vis_expect(data, expectation, show_perc = TRUE)
+vis_expect(data, ...)
 }
 \arguments{
 \item{data}{a data.frame}

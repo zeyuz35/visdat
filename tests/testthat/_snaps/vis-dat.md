@@ -7,16 +7,6 @@
       ! Palette arguments need to be one of: 'qual', 'cb_safe', or 'default'
       You palette argument was: `wat`
 
-# vis_dat fails when an object of the wrong class is provided
-
-    Code
-      vis_dat(AirPassengers)
-    Condition
-      Error in `test_if_dataframe()`:
-      ! `vis_dat()` requires a <data.frame>
-      the object I see has class(es):
-      <ts>
-
 # data_vis_dat gets the data properly
 
     Code

@@ -74,7 +74,10 @@
 #' }
 #'
 #' @export
-vis_miss <- function(
+vis_miss <- function(x, ...) UseMethod("vis_miss")
+
+#' @export
+vis_miss.data.frame <- function(
   x,
   cluster = FALSE,
   sort_miss = FALSE,
@@ -82,9 +85,9 @@ vis_miss <- function(
   show_perc_col = TRUE,
   large_data_size = 900000,
   warn_large_data = TRUE,
-  facet
-    ) {
-
+  facet,
+  transpose = FALSE
+) {
   test_if_dataframe(x)
   test_if_large_data(x, large_data_size, warn_large_data)
 
@@ -103,8 +106,7 @@ vis_miss <- function(
       col_order_index,
       facet,
       environment()
-      )
-
+    )
   } else {
     vis_miss_data <- data_vis_miss(x, cluster)
   }
@@ -113,6 +115,9 @@ vis_miss <- function(
   # make a TRUE/FALSE matrix of the data.
   # This tells us whether it is missing (true) or not (false)
   x_fingerprinted <- fingerprint_df(x)
+
+  # optional y-axis labels for time series data
+  row_labels <- attr(x, "row_labels")
 
   if (show_perc) {
     temp <- miss_guide_label(x_fingerprinted)
@@ -179,23 +184,63 @@ vis_miss <- function(
       ggplot2::facet_wrap(facets = dplyr::vars({{ facet }}))
   }
 
-  if (show_perc_col && missing(facet)) {
-    # flip the axes, add the info about limits
+  if (!is.null(row_labels)) {
+    # For time series, map series to x-axis and time to y-axis.
+    vis_miss_plot$data$time <- as.Date(row_labels[vis_miss_plot$data$rows])
+    
+    # Remove geom_raster layer to prevent uneven spacing warnings, use geom_tile instead
+    vis_miss_plot$layers[[1]] <- NULL
+    
     vis_miss_plot <- vis_miss_plot +
-      ggplot2::scale_x_discrete(
-        position = "top",
-        limits = col_order_index,
-        labels = label_col_missing_pct(
-          x_fingerprinted,
-          col_order_index
+      ggplot2::geom_tile(ggplot2::aes(x = variable, y = time, fill = valueType)) +
+      ggplot2::scale_y_date(expand = c(0, 0))
+      
+    if (transpose) {
+      vis_miss_plot <- vis_miss_plot + ggplot2::coord_flip()
+    } else {
+      vis_miss_plot <- vis_miss_plot + ggplot2::coord_trans(y = "reverse")
+    }
+    
+    vis_miss_plot <- vis_miss_plot + 
+      ggplot2::labs(x = if(transpose) "Time" else "Series", y = if(transpose) "Series" else "Time")
+      
+    if (show_perc_col && missing(facet)) {
+      vis_miss_plot <- vis_miss_plot +
+        ggplot2::scale_x_discrete(
+          position = ifelse(transpose, "bottom", "top"),
+          limits = if (transpose) rev(col_order_index) else col_order_index,
+          labels = if (transpose) rev(label_col_missing_pct(x_fingerprinted, col_order_index)) else label_col_missing_pct(x_fingerprinted, col_order_index)
         )
-      )
+    } else {
+      vis_miss_plot <- vis_miss_plot +
+        ggplot2::scale_x_discrete(
+          position = ifelse(transpose, "bottom", "top"),
+          limits = if (transpose) rev(col_order_index) else col_order_index
+        )
+    }
   } else {
-    vis_miss_plot <- vis_miss_plot +
-      ggplot2::scale_x_discrete(
-        position = "top",
-        limits = col_order_index
-      )
+    if (transpose) {
+      vis_miss_plot <- vis_miss_plot + 
+        ggplot2::coord_flip() + 
+        ggplot2::scale_y_continuous() +
+        ggplot2::labs(x = "Observations", y = "")
+    }
+    
+    if (show_perc_col && missing(facet)) {
+      # flip the axes, add the info about limits
+      vis_miss_plot <- vis_miss_plot +
+        ggplot2::scale_x_discrete(
+          position = ifelse(transpose, "bottom", "top"),
+          limits = if (transpose) rev(col_order_index) else col_order_index,
+          labels = if (transpose) rev(label_col_missing_pct(x_fingerprinted, col_order_index)) else label_col_missing_pct(x_fingerprinted, col_order_index)
+        )
+    } else {
+      vis_miss_plot <- vis_miss_plot +
+        ggplot2::scale_x_discrete(
+          position = ifelse(transpose, "bottom", "top"),
+          limits = if (transpose) rev(col_order_index) else col_order_index
+        )
+    }
   }
 
   return(vis_miss_plot)
@@ -205,3 +250,45 @@ vis_miss <- function(
   # http://www.markhneedham.com/blog/2015/02/27/rggplot-controlling-x-axis-order/
   # For the tip on using scale_x_discrete
 } # end of function
+
+
+# Time series methods: convert via tsbox to transposed data.frame, then dispatch.
+vis_miss.ts <- function(x, ...) {
+  y <- ts_to_df(x)
+  vis_miss.data.frame(y, ...)
+}
+
+vis_miss.mts <- function(x, ...) {
+  vis_miss.data.frame(ts_to_df(x), ...)
+}
+
+vis_miss.zoo <- function(x, ...) {
+  vis_miss.data.frame(ts_to_df(x), ...)
+}
+
+vis_miss.xts <- function(x, ...) {
+  vis_miss.data.frame(ts_to_df(x), ...)
+}
+
+vis_miss.tbl_ts <- function(x, ...) {
+  vis_miss.data.frame(ts_to_df(x), ...)
+}
+
+vis_miss.tbl_df <- function(x, ...) {
+  vis_miss.data.frame(as.data.frame(x), ...)
+}
+
+vis_miss.tsibble <- function(x, ...) {
+  vis_miss.data.frame(ts_to_df(x), ...)
+}
+
+vis_miss.default <- function(x, ...) {
+  if (tsbox::ts_boxable(x)) {
+    vis_miss.data.frame(ts_to_df(x), ...)
+  } else {
+    stop(
+      "vis_miss requires a data.frame or supported time series object",
+      call. = FALSE
+    )
+  }
+}

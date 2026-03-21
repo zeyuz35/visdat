@@ -8,33 +8,3 @@
       The dimensions of `df1` are: 150 and 5
       The dimensions of `df2` are: 150 and 6
 
-# vis_compare fails when an object of the wrong class is provided
-
-    Code
-      vis_compare(iris, AirPassengers)
-    Condition
-      Error in `test_if_dataframe()`:
-      ! `vis_dat()` requires a <data.frame>
-      the object I see has class(es):
-      <ts>
-
----
-
-    Code
-      vis_compare(AirPassengers, iris)
-    Condition
-      Error in `test_if_dataframe()`:
-      ! `vis_dat()` requires a <data.frame>
-      the object I see has class(es):
-      <ts>
-
----
-
-    Code
-      vis_compare(AirPassengers, AirPassengers)
-    Condition
-      Error in `test_if_dataframe()`:
-      ! `vis_dat()` requires a <data.frame>
-      the object I see has class(es):
-      <ts>
-

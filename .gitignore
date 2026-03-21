@@ -6,3 +6,10 @@ inst/doc
 paper/*.html
 paper/*.pdf
 docs
+
+*.code-workspace
+
+LLM/
+scratch/
+smoke/
+

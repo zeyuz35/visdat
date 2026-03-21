@@ -28,11 +28,10 @@ test_that("vis_dat fails when the wrong palette is provided",{
     )
 })
 
-test_that("vis_dat fails when an object of the wrong class is provided", {
-  expect_snapshot(
-    error = TRUE,
-    vis_dat(AirPassengers)
-    )
+test_that("vis_dat accepts ts objects via S3 dispatch", {
+  # AirPassengers now dispatches via vis_dat.ts, so it should succeed
+  p <- vis_dat(AirPassengers)
+  expect_s3_class(p, "ggplot")
 })
 
 vis_dat_facet <- vis_dat(airquality, facet = Month)

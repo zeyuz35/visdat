@@ -22,9 +22,8 @@ test_that("vis_expect creates the right plot",{
                               vis_expect_plot_show_perc_true)
 })
 
-test_that("vis_expect fails when an object of the wrong class is provided", {
-  expect_snapshot(
-    error = TRUE,
-    vis_expect(AirPassengers, ~.x < 20)
-    )
+test_that("vis_expect accepts ts objects via S3 dispatch", {
+  # AirPassengers dispatches via vis_expect.ts
+  p <- vis_expect(AirPassengers, ~.x < 400)
+  expect_s3_class(p, "ggplot")
 })

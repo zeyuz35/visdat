@@ -4,16 +4,7 @@
 \alias{vis_miss}
 \title{Visualise a data.frame to display missingness.}
 \usage{
-vis_miss(
-  x,
-  cluster = FALSE,
-  sort_miss = FALSE,
-  show_perc = TRUE,
-  show_perc_col = TRUE,
-  large_data_size = 9e+05,
-  warn_large_data = TRUE,
-  facet
-)
+vis_miss(x, ...)
 }
 \arguments{
 \item{x}{a data.frame}
@@ -34,12 +25,12 @@ No missingness percentage column information will be presented when \code{facet}
 argument is used. Please see the \code{naniar} package to provide missingness
 summaries over groups.}
 
+\item{warn_large_data}{logical - warn if there is large data? Default is TRUE
+see note for more details}
+
 \item{large_data_size}{integer default is 900000 (given by
 `nrow(data.frame) * ncol(data.frame)``). This can be changed. See
 note for more details.}
-
-\item{warn_large_data}{logical - warn if there is large data? Default is TRUE
-see note for more details}
 
 \item{facet}{(optional) bare variable name, if you want to create a faceted
 plot, with one plot per level of the variable. No missingness percentage

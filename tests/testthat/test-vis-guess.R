@@ -20,9 +20,8 @@ test_that("vis_guess fails when the wrong palette is provided",{
     )
 })
 
-test_that("vis_guess fails when an object of the wrong class is provided", {
-  expect_snapshot(
-    error = TRUE,
-    vis_guess(AirPassengers)
-    )
+test_that("vis_guess accepts ts objects via S3 dispatch", {
+  # AirPassengers dispatches via vis_guess.ts
+  p <- vis_guess(AirPassengers)
+  expect_s3_class(p, "ggplot")
 })

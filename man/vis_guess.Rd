@@ -4,7 +4,7 @@
 \alias{vis_guess}
 \title{Visualise type guess in a data.frame}
 \usage{
-vis_guess(x, palette = "default")
+vis_guess(x, ...)
 }
 \arguments{
 \item{x}{a data.frame}

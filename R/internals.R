@@ -441,3 +441,65 @@ n_miss_col <- function(data, sort = FALSE){
 
   n_missing_cols
 }
+
+#' Convert time series input into data.frame where columns are time.
+#' This makes the graphical functions' x axes represent time series indices.
+#' @param x time series object
+#' @return data.frame with row_labels attribute
+#' @noRd
+#' @keywords internal
+ts_to_df <- function(x) {
+  if (!tsbox::ts_boxable(x)) {
+    cli::cli_abort(
+      "This vis_ function requires a data.frame or supported time series object"
+    )
+  }
+
+  x_df <- tsbox::ts_df(x)
+  if ("id" %in% names(x_df)) {
+    x_df <- tsbox::ts_wide(x_df)
+  }
+
+  # pick a time-like index column from ts_df output
+  time_cols <- names(x_df)[vapply(
+    x_df,
+    function(col) {
+      inherits(
+        col,
+        c(
+          "Date",
+          "POSIXct",
+          "POSIXt",
+          "yearquarter",
+          "yearmonth",
+          "yearweek",
+          "yearmonth",
+          "yearquarter",
+          "ts"
+        )
+      )
+    },
+    logical(1)
+  )]
+
+  if (length(time_cols) == 0L) {
+    cli::cli_abort("Could not detect a time index column in ts_df output")
+  }
+
+  time_idx <- x_df[[time_cols[1]]]
+
+  data_cols <- setdiff(names(x_df), time_cols[1])
+  if (length(data_cols) == 0L) {
+    cli::cli_abort("Time series object must contain at least one data column")
+  }
+
+  series_df <- x_df[data_cols]
+
+  if (nrow(series_df) != length(time_idx)) {
+    cli::cli_abort("Unexpected mismatch between time index and series rows")
+  }
+
+  # store time index as row labels for plotting x axis
+  attr(series_df, "row_labels") <- time_idx
+  series_df
+}

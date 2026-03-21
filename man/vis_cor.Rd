@@ -4,16 +4,12 @@
 \alias{vis_cor}
 \title{Visualise correlations amongst variables in your data as a heatmap}
 \usage{
-vis_cor(
-  data,
-  cor_method = "pearson",
-  na_action = "pairwise.complete.obs",
-  facet,
-  ...
-)
+vis_cor(data, ...)
 }
 \arguments{
 \item{data}{data.frame}
+
+\item{...}{extra arguments you may want to pass to \code{cor}}
 
 \item{cor_method}{correlation method to use, from \code{cor}: "a character
 string indicating which correlation coefficient (or covariance) is to be
@@ -26,8 +22,6 @@ values present. This can be "everything", "all.obs", "complete.obs",
 taken from the \code{cor} function argument \code{use}.,}
 
 \item{facet}{bare unqouted variable to use for facetting}
-
-\item{...}{extra arguments you may want to pass to \code{cor}}
 }
 \value{
 ggplot2 object

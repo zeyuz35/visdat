@@ -18,6 +18,7 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
+<rect x='0.00' y='0.00' width='720.00' height='576.00' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 </g>
 <defs>
   <clipPath id='cpNTIuMzV8MjQ0LjE4fDgzLjI4fDMxNS44NA=='>
@@ -120,15 +121,6 @@
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
 </g>
 <defs>
-  <clipPath id='cpNDQ2Ljk3fDYzOC44MHwzMzcuOTd8NTcwLjUy'>
-    <rect x='446.97' y='337.97' width='191.83' height='232.55' />
-  </clipPath>
-</defs>
-<g clip-path='url(#cpNDQ2Ljk3fDYzOC44MHwzMzcuOTd8NTcwLjUy)'>
-</g>
-<g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
-</g>
-<defs>
   <clipPath id='cpNTIuMzV8MjQ0LjE4fDMyMS4zMnwzMzcuOTc='>
     <rect x='52.35' y='321.32' width='191.83' height='16.65' />
   </clipPath>
@@ -145,15 +137,6 @@
 </defs>
 <g clip-path='url(#cpMjQ5LjY2fDQ0MS40OXwzMjEuMzJ8MzM3Ljk3)'>
 <text x='345.58' y='332.67' text-anchor='middle' style='font-size: 8.80px; fill: #1A1A1A; font-family: sans;' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>9</text>
-</g>
-<g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
-</g>
-<defs>
-  <clipPath id='cpNDQ2Ljk3fDYzOC44MHwzMjEuMzJ8MzM3Ljk3'>
-    <rect x='446.97' y='321.32' width='191.83' height='16.65' />
-  </clipPath>
-</defs>
-<g clip-path='url(#cpNDQ2Ljk3fDYzOC44MHwzMjEuMzJ8MzM3Ljk3)'>
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
 </g>
@@ -186,21 +169,21 @@
 <text x='542.88' y='77.99' text-anchor='middle' style='font-size: 8.80px; fill: #1A1A1A; font-family: sans;' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>7</text>
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
-<text transform='translate(74.48,61.70) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='15.66px' lengthAdjust='spacingAndGlyphs'>Day</text>
-<text transform='translate(111.38,61.70) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='25.94px' lengthAdjust='spacingAndGlyphs'>Ozone</text>
-<text transform='translate(148.27,61.70) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='29.35px' lengthAdjust='spacingAndGlyphs'>Solar.R</text>
-<text transform='translate(185.16,61.70) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='22.50px' lengthAdjust='spacingAndGlyphs'>Temp</text>
-<text transform='translate(222.05,61.70) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='20.05px' lengthAdjust='spacingAndGlyphs'>Wind</text>
-<text transform='translate(271.79,61.70) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='15.66px' lengthAdjust='spacingAndGlyphs'>Day</text>
-<text transform='translate(308.68,61.70) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='25.94px' lengthAdjust='spacingAndGlyphs'>Ozone</text>
-<text transform='translate(345.58,61.70) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='29.35px' lengthAdjust='spacingAndGlyphs'>Solar.R</text>
-<text transform='translate(382.47,61.70) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='22.50px' lengthAdjust='spacingAndGlyphs'>Temp</text>
-<text transform='translate(419.36,61.70) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='20.05px' lengthAdjust='spacingAndGlyphs'>Wind</text>
-<text transform='translate(469.10,61.70) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='15.66px' lengthAdjust='spacingAndGlyphs'>Day</text>
-<text transform='translate(505.99,61.70) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='25.94px' lengthAdjust='spacingAndGlyphs'>Ozone</text>
-<text transform='translate(542.88,61.70) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='29.35px' lengthAdjust='spacingAndGlyphs'>Solar.R</text>
-<text transform='translate(579.77,61.70) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='22.50px' lengthAdjust='spacingAndGlyphs'>Temp</text>
-<text transform='translate(616.67,61.70) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='20.05px' lengthAdjust='spacingAndGlyphs'>Wind</text>
+<text transform='translate(78.77,39.66) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='15.66px' lengthAdjust='spacingAndGlyphs'>Day</text>
+<text transform='translate(115.66,39.66) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='25.94px' lengthAdjust='spacingAndGlyphs'>Ozone</text>
+<text transform='translate(152.55,39.66) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='29.35px' lengthAdjust='spacingAndGlyphs'>Solar.R</text>
+<text transform='translate(189.44,39.66) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='22.50px' lengthAdjust='spacingAndGlyphs'>Temp</text>
+<text transform='translate(226.33,39.66) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='20.05px' lengthAdjust='spacingAndGlyphs'>Wind</text>
+<text transform='translate(276.08,39.66) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='15.66px' lengthAdjust='spacingAndGlyphs'>Day</text>
+<text transform='translate(312.97,39.66) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='25.94px' lengthAdjust='spacingAndGlyphs'>Ozone</text>
+<text transform='translate(349.86,39.66) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='29.35px' lengthAdjust='spacingAndGlyphs'>Solar.R</text>
+<text transform='translate(386.75,39.66) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='22.50px' lengthAdjust='spacingAndGlyphs'>Temp</text>
+<text transform='translate(423.64,39.66) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='20.05px' lengthAdjust='spacingAndGlyphs'>Wind</text>
+<text transform='translate(473.39,39.66) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='15.66px' lengthAdjust='spacingAndGlyphs'>Day</text>
+<text transform='translate(510.28,39.66) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='25.94px' lengthAdjust='spacingAndGlyphs'>Ozone</text>
+<text transform='translate(547.17,39.66) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='29.35px' lengthAdjust='spacingAndGlyphs'>Solar.R</text>
+<text transform='translate(584.06,39.66) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='22.50px' lengthAdjust='spacingAndGlyphs'>Temp</text>
+<text transform='translate(620.95,39.66) rotate(-45)' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='20.05px' lengthAdjust='spacingAndGlyphs'>Wind</text>
 <text x='47.42' y='292.03' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='15.66px' lengthAdjust='spacingAndGlyphs'>Day</text>
 <text x='47.42' y='247.31' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='25.94px' lengthAdjust='spacingAndGlyphs'>Ozone</text>
 <text x='47.42' y='202.59' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='29.35px' lengthAdjust='spacingAndGlyphs'>Solar.R</text>
@@ -212,11 +195,11 @@
 <text x='47.42' y='412.55' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='22.50px' lengthAdjust='spacingAndGlyphs'>Temp</text>
 <text x='47.42' y='367.83' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='20.05px' lengthAdjust='spacingAndGlyphs'>Wind</text>
 <text x='655.24' y='284.75' style='font-size: 11.00px; font-family: sans;' textLength='53.80px' lengthAdjust='spacingAndGlyphs'>Correlation</text>
-<rect x='655.24' y='291.37' width='17.28' height='17.28' style='stroke-width: 0.75; stroke: none; fill: #001260;' />
-<rect x='655.24' y='308.65' width='17.28' height='17.28' style='stroke-width: 0.75; stroke: none; fill: #8077A4;' />
-<rect x='655.24' y='325.93' width='17.28' height='17.28' style='stroke-width: 0.75; stroke: none; fill: #EAEDE9;' />
-<rect x='655.24' y='343.21' width='17.28' height='17.28' style='stroke-width: 0.75; stroke: none; fill: #AC7D6D;' />
-<rect x='655.24' y='360.49' width='17.28' height='17.28' style='stroke-width: 0.75; stroke: none; fill: #601200;' />
+<rect x='655.24' y='291.37' width='17.28' height='17.28' style='stroke-width: 0.00; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #001260;' />
+<rect x='655.24' y='308.65' width='17.28' height='17.28' style='stroke-width: 0.00; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #8077A4;' />
+<rect x='655.24' y='325.93' width='17.28' height='17.28' style='stroke-width: 0.00; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #EAEDE9;' />
+<rect x='655.24' y='343.21' width='17.28' height='17.28' style='stroke-width: 0.00; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #AC7D6D;' />
+<rect x='655.24' y='360.49' width='17.28' height='17.28' style='stroke-width: 0.00; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #601200;' />
 <text x='678.00' y='303.04' style='font-size: 8.80px; font-family: sans;' textLength='15.16px' lengthAdjust='spacingAndGlyphs'>-1.0</text>
 <text x='678.00' y='320.32' style='font-size: 8.80px; font-family: sans;' textLength='15.16px' lengthAdjust='spacingAndGlyphs'>-0.5</text>
 <text x='678.00' y='337.60' style='font-size: 8.80px; font-family: sans;' textLength='12.23px' lengthAdjust='spacingAndGlyphs'>0.0</text>

@@ -26,11 +26,14 @@
 #' # this will error
 #' vis_cor(iris)
 #' }
-vis_cor <- function(data,
-                    cor_method = "pearson",
-                    na_action = "pairwise.complete.obs",
-                    facet,
-                    ...){
+vis_cor <- function(data, ...) UseMethod("vis_cor")
+
+#' @export
+vis_cor.data.frame <- function(data,
+                               cor_method = "pearson",
+                               na_action = "pairwise.complete.obs",
+                               facet,
+                               ...){
 
   test_if_dataframe(data)
   test_if_all_numeric(data)
@@ -72,4 +75,53 @@ vis_cor_create <- function(data){
     ggplot2::guides(fill = ggplot2::guide_legend(title = "Correlation")) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45,
                                                        hjust = 0))
+}
+
+# Time series methods: convert via tsbox to transposed data.frame, then dispatch.
+#' @export
+vis_cor.ts <- function(data, ...) {
+  y <- ts_to_df(data)
+  vis_cor.data.frame(y, ...)
+}
+
+#' @export
+vis_cor.mts <- function(data, ...) {
+  vis_cor.data.frame(ts_to_df(data), ...)
+}
+
+#' @export
+vis_cor.zoo <- function(data, ...) {
+  vis_cor.data.frame(ts_to_df(data), ...)
+}
+
+#' @export
+vis_cor.xts <- function(data, ...) {
+  vis_cor.data.frame(ts_to_df(data), ...)
+}
+
+#' @export
+vis_cor.tbl_ts <- function(data, ...) {
+  vis_cor.data.frame(ts_to_df(data), ...)
+}
+
+#' @export
+vis_cor.tbl_df <- function(data, ...) {
+  vis_cor.data.frame(as.data.frame(data), ...)
+}
+
+#' @export
+vis_cor.tsibble <- function(data, ...) {
+  vis_cor.data.frame(ts_to_df(data), ...)
+}
+
+#' @export
+vis_cor.default <- function(data, ...) {
+  if (tsbox::ts_boxable(data)) {
+    vis_cor.data.frame(ts_to_df(data), ...)
+  } else {
+    stop(
+      "vis_cor requires a data.frame or supported time series object",
+      call. = FALSE
+    )
+  }
 }
