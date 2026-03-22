@@ -36,8 +36,8 @@ vis_value.data.frame <- function(data,
                                  transpose = FALSE, ...) {
   test_if_all_numeric(data)
 
-  vis_data <- purrr::map_dfr(data, scale_01) %>%
-    vis_gather_() %>%
+  vis_data <- purrr::map_dfr(data, scale_01) |>
+    vis_gather_() |>
     dplyr::mutate(
       value = vis_extract_value_(data),
       value = as.numeric(value),

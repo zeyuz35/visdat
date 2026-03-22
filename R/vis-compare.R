@@ -47,10 +47,10 @@ vis_compare.data.frame <- function(df1, df2, transpose = FALSE, ...){
 
   df_diff <- purrr::map2_df(df1, df2, v_identical)
 
-  d <- df_diff %>%
-    as.data.frame() %>%
-    purrr::map_df(compare_print) %>%
-    vis_gather_() %>%
+  d <- df_diff |>
+    as.data.frame() |>
+    purrr::map_df(compare_print) |>
+    vis_gather_() |>
     dplyr::mutate(value_df1 = vis_extract_value_(df1),
                   value_df2 = vis_extract_value_(df2))
 

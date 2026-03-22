@@ -34,12 +34,12 @@ vis_binary.data.frame <- function(data,
 
   test_if_all_binary(data)
 
-  vis_binary_plot <- data %>%
-    vis_gather_() %>%
-    dplyr::mutate(value = vis_extract_value_(data)) %>%
+  vis_binary_plot <- data |>
+    vis_gather_() |>
+    dplyr::mutate(value = vis_extract_value_(data)) |>
     dplyr::mutate(valueType = forcats::as_factor(valueType),
                   value = forcats::as_factor(value),
-                  variable = forcats::fct_relevel(variable, order)) %>%
+                  variable = forcats::fct_relevel(variable, order)) |>
     vis_create_() +
     # change the limits etc.
     ggplot2::guides(fill = ggplot2::guide_legend(title = "Value")) +
