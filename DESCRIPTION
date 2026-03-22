@@ -47,7 +47,10 @@ Suggests:
     vdiffr,
     spelling,
     covr,
-    stringr
+    stringr,
+    tsbox,
+    xts,
+    vars
 VignetteBuilder: knitr
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
