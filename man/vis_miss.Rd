@@ -9,6 +9,8 @@ vis_miss(x, ...)
 \arguments{
 \item{x}{a data.frame}
 
+\item{...}{Extra arguments passed to methods.}
+
 \item{cluster}{logical. TRUE specifies that you want to use hierarchical
 clustering (mcquitty method) to arrange rows according to missingness.
 FALSE specifies that you want to leave it as is. Default value is FALSE.}
