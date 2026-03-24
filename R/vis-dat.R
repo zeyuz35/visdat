@@ -21,7 +21,7 @@
 #'   see note for more details
 #'
 #' @param large_data_size integer default is 900000 (given by
-#'   `nrow(data.frame) * ncol(data.frame)``). This can be changed. See
+#'   \code{nrow(data.frame) * ncol(data.frame)}). This can be changed. See
 #'   note for more details.
 #'
 #' @param facet bare variable name for a variable you would like to facet
