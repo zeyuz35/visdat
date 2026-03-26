@@ -455,6 +455,9 @@ ts_to_df <- function(x) {
     )
   }
 
+  # Capture original attributes
+  original_attrs <- attributes(x)
+
   x_df <- tsbox::ts_df(x)
   if ("id" %in% names(x_df)) {
     x_df <- tsbox::ts_wide(x_df)
@@ -498,6 +501,11 @@ ts_to_df <- function(x) {
   if (nrow(series_df) != length(time_idx)) {
     cli::cli_abort("Unexpected mismatch between time index and series rows")
   }
+
+  # Restore attributes except structural ones
+  excluded_attrs <- c("dim", "dimnames", "tsp", "class", "names", "row.names", "index")
+  attrs_to_restore <- original_attrs[setdiff(names(original_attrs), excluded_attrs)]
+  attributes(series_df) <- utils::modifyList(attributes(series_df), attrs_to_restore)
 
   # store time index as row labels for plotting x axis
   attr(series_df, "row_labels") <- time_idx
