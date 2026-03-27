@@ -54,3 +54,16 @@ test_that("fingerprint can count n/a in list columns",{
   expect_equal(sum(visdat:::fingerprint(dplyr::starwars$vehicles)%>% is.na()),76)
 })
 
+
+test_that("ts_to_df preserves attributes except core structural ones", {
+  library(xts)
+  data(sample_matrix)
+  x <- as.xts(sample_matrix)
+  attr(x, "scale") <- c(1, 2, 3, 4)
+  attr(x, "custom_metadata") <- "test"
+
+  df <- visdat:::ts_to_df(x)
+
+  expect_equal(attr(df, "scale"), c(1, 2, 3, 4))
+  expect_equal(attr(df, "custom_metadata"), "test")
+})
