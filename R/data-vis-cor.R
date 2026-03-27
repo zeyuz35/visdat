@@ -13,8 +13,8 @@
 #' \dontrun{
 #' #return vis_dat data for each group
 #' library(dplyr)
-#' airquality %>%
-#'   group_by(Month) %>%
+#' airquality |>
+#'   group_by(Month) |>
 #'   data_vis_cor()
 #' }
 data_vis_cor <- function(x, ...){
@@ -53,14 +53,14 @@ data_vis_cor.data.frame <- function(x,
 
   stats::cor(x,
              method = cor_method,
-             use = na_action) %>%
-    as.data.frame() %>%
-    tibble::rownames_to_column() %>%
+             use = na_action) |>
+    as.data.frame() |>
+    tibble::rownames_to_column() |>
     tidyr::pivot_longer(
       cols = -rowname,
       names_to = "key",
       values_to = "value"
-    ) %>%
+    ) |>
     purrr::set_names(c("row_1", "row_2", "value"))
 
 }
