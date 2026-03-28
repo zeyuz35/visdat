@@ -26,7 +26,7 @@
 #' diamonds %>%
 #'   select_if(is.numeric) %>%
 #'   vis_value()
-#'}
+#' }
 vis_value <- function(data, ...) UseMethod("vis_value")
 
 #' @export
@@ -43,45 +43,47 @@ vis_value.data.frame <- function(data,
       value = as.numeric(value),
       valueType = as.numeric(valueType)
     )
-    
+
   vis_value_plot <- vis_create_(vis_data) +
     # change the limits etc.
     ggplot2::guides(fill = ggplot2::guide_legend(title = "Value")) +
-    ggplot2::scale_fill_viridis_c(option = viridis_option,
-                                  na.value = na_colour)
+    ggplot2::scale_fill_viridis_c(
+      option = viridis_option,
+      na.value = na_colour
+    )
 
   row_labels <- attr(data, "row_labels")
-  
+
   if (!is.null(row_labels)) {
     vis_value_plot$data$time <- as.Date(row_labels[vis_value_plot$data$rows])
     vis_value_plot$layers[[1]] <- NULL
-    
+
     vis_value_plot <- vis_value_plot +
       ggplot2::geom_tile(ggplot2::aes(x = variable, y = time, fill = valueType)) +
       ggplot2::scale_y_date(expand = c(0, 0)) +
-      ggplot2::scale_x_discrete(position = ifelse(transpose, "bottom", "top"), limits = if(transpose) rev(names(data)) else names(data)) +
+      ggplot2::scale_x_discrete(position = ifelse(transpose, "bottom", "top"), limits = if (transpose) rev(names(data)) else names(data)) +
       ggplot2::theme(axis.text.x = ggplot2::element_text(hjust = 0))
-      
+
     if (transpose) {
       vis_value_plot <- vis_value_plot + ggplot2::coord_flip()
     } else {
       vis_value_plot <- vis_value_plot + ggplot2::coord_trans(y = "reverse")
     }
-    vis_value_plot <- vis_value_plot + 
-      ggplot2::labs(x = if(transpose) "Time" else "Series", y = if(transpose) "Series" else "Time")
+    vis_value_plot <- vis_value_plot +
+      ggplot2::labs(x = if (transpose) "Time" else "Series", y = if (transpose) "Series" else "Time")
   } else {
     vis_value_plot <- vis_value_plot +
-      ggplot2::scale_x_discrete(position = ifelse(transpose, "bottom", "top"), limits = if(transpose) rev(names(data)) else names(data)) +
+      ggplot2::scale_x_discrete(position = ifelse(transpose, "bottom", "top"), limits = if (transpose) rev(names(data)) else names(data)) +
       ggplot2::theme(axis.text.x = ggplot2::element_text(hjust = 0))
 
     if (transpose) {
-      vis_value_plot <- vis_value_plot + 
-        ggplot2::coord_flip() + 
+      vis_value_plot <- vis_value_plot +
+        ggplot2::coord_flip() +
         ggplot2::scale_y_continuous() +
         ggplot2::labs(x = "Observations", y = "")
     }
   }
-  
+
   vis_value_plot
 }
 

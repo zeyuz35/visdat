@@ -31,15 +31,17 @@
 #'   see note for more details
 #'
 #' @param large_data_size integer default is 900000 (given by
-#'   `nrow(data.frame) * ncol(data.frame)``). This can be changed. See
+#'   \code{nrow(data.frame) * ncol(data.frame)}). This can be changed. See
 #'   note for more details.
 #'
 #' @param facet (optional) bare variable name, if you want to create a faceted
 #'   plot, with one plot per level of the variable. No missingness percentage
-#'   column information will be presented when `facet` argument is used. Please
-#'   see the `naniar` package to provide missingness summaries over groups.
+#'   column information will be presented when \code{facet} argument is used. Please
+#'   see the \code{naniar} package to provide missingness summaries over groups.
 #'
-#' @return `ggplot2` object displaying the position of missing values in the
+#' @param transpose logical TRUE/FALSE. When TRUE, transposes the plot.
+#'
+#' @return \code{ggplot2} object displaying the position of missing values in the
 #'   dataframe, and the percentage of values missing and present.
 #'
 #' @seealso [vis_dat()] [vis_guess()] [vis_expect()] [vis_cor()] [vis_compare()]
@@ -187,23 +189,23 @@ vis_miss.data.frame <- function(
   if (!is.null(row_labels)) {
     # For time series, map series to x-axis and time to y-axis.
     vis_miss_plot$data$time <- as.Date(row_labels[vis_miss_plot$data$rows])
-    
+
     # Remove geom_raster layer to prevent uneven spacing warnings, use geom_tile instead
     vis_miss_plot$layers[[1]] <- NULL
-    
+
     vis_miss_plot <- vis_miss_plot +
       ggplot2::geom_tile(ggplot2::aes(x = variable, y = time, fill = valueType)) +
       ggplot2::scale_y_date(expand = c(0, 0))
-      
+
     if (transpose) {
       vis_miss_plot <- vis_miss_plot + ggplot2::coord_flip()
     } else {
       vis_miss_plot <- vis_miss_plot + ggplot2::coord_trans(y = "reverse")
     }
-    
-    vis_miss_plot <- vis_miss_plot + 
-      ggplot2::labs(x = if(transpose) "Time" else "Series", y = if(transpose) "Series" else "Time")
-      
+
+    vis_miss_plot <- vis_miss_plot +
+      ggplot2::labs(x = if (transpose) "Time" else "Series", y = if (transpose) "Series" else "Time")
+
     if (show_perc_col && missing(facet)) {
       vis_miss_plot <- vis_miss_plot +
         ggplot2::scale_x_discrete(
@@ -220,12 +222,12 @@ vis_miss.data.frame <- function(
     }
   } else {
     if (transpose) {
-      vis_miss_plot <- vis_miss_plot + 
-        ggplot2::coord_flip() + 
+      vis_miss_plot <- vis_miss_plot +
+        ggplot2::coord_flip() +
         ggplot2::scale_y_continuous() +
         ggplot2::labs(x = "Observations", y = "")
     }
-    
+
     if (show_perc_col && missing(facet)) {
       # flip the axes, add the info about limits
       vis_miss_plot <- vis_miss_plot +
@@ -253,35 +255,43 @@ vis_miss.data.frame <- function(
 
 
 # Time series methods: convert via tsbox to transposed data.frame, then dispatch.
+#' @export
 vis_miss.ts <- function(x, ...) {
   y <- ts_to_df(x)
   vis_miss.data.frame(y, ...)
 }
 
+#' @export
 vis_miss.mts <- function(x, ...) {
   vis_miss.data.frame(ts_to_df(x), ...)
 }
 
+#' @export
 vis_miss.zoo <- function(x, ...) {
   vis_miss.data.frame(ts_to_df(x), ...)
 }
 
+#' @export
 vis_miss.xts <- function(x, ...) {
   vis_miss.data.frame(ts_to_df(x), ...)
 }
 
+#' @export
 vis_miss.tbl_ts <- function(x, ...) {
   vis_miss.data.frame(ts_to_df(x), ...)
 }
 
+#' @export
 vis_miss.tbl_df <- function(x, ...) {
   vis_miss.data.frame(as.data.frame(x), ...)
 }
 
+#' @export
 vis_miss.tsibble <- function(x, ...) {
   vis_miss.data.frame(ts_to_df(x), ...)
 }
 
+#' @export
 vis_miss.default <- function(x, ...) {
   if (tsbox::ts_boxable(x)) {
     vis_miss.data.frame(ts_to_df(x), ...)

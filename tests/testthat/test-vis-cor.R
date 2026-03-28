@@ -1,19 +1,20 @@
 # try out all the options
 vis_cor_plot <- vis_cor(airquality)
 
-test_that("vis_cor creates the right plot",{
+test_that("vis_cor creates the right plot", {
   skip_on_cran()
   skip_on_ci()
-  vdiffr::expect_doppelganger("vis_cor vanilla",
-                              vis_cor_plot)
-
+  vdiffr::expect_doppelganger(
+    "vis_cor vanilla",
+    vis_cor_plot
+  )
 })
 
-test_that("vis_cor sends an error when used with the wrong data",{
+test_that("vis_cor sends an error when used with the wrong data", {
   expect_snapshot(
     error = TRUE,
     vis_cor(iris)
-    )
+  )
 })
 
 test_that("vis_cor fails when an object of the wrong class is provided", {
@@ -32,7 +33,9 @@ test_that("vis_cor works with facetting", {
 
 library(dplyr)
 the_vis_cor_data <- data_vis_cor(airquality)
-the_vis_cor_data_month <- airquality %>% group_by(Month) %>% data_vis_cor()
+the_vis_cor_data_month <- airquality %>%
+  group_by(Month) %>%
+  data_vis_cor()
 
 test_that("data_vis_cor gets the data properly", {
   expect_type(the_vis_cor_data, "list")
@@ -45,4 +48,3 @@ test_that("data_vis_cor gets the data properly for groups", {
   expect_s3_class(the_vis_cor_data_month, "data.frame")
   expect_snapshot(the_vis_cor_data_month)
 })
-

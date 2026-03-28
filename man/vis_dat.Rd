@@ -9,6 +9,8 @@ vis_dat(x, ...)
 \arguments{
 \item{x}{a data.frame object}
 
+\item{...}{extra arguments passed to \code{vis_dat.data.frame}}
+
 \item{sort_type}{logical TRUE/FALSE. When TRUE (default), it sorts by the
 type in the column to make it easier to see what is in the data}
 
@@ -23,13 +25,15 @@ from http://colorbrewer2.org/.}
 see note for more details}
 
 \item{large_data_size}{integer default is 900000 (given by
-`nrow(data.frame) * ncol(data.frame)``). This can be changed. See
+\code{nrow(data.frame) * ncol(data.frame)}). This can be changed. See
 note for more details.}
 
 \item{facet}{bare variable name for a variable you would like to facet
 by. By default there is no facetting. Only one variable can be facetted.
 You can get the data structure using \code{data_vis_dat} and the facetted
 structure by using \code{group_by} and then \code{data_vis_dat}.}
+
+\item{transpose}{logical TRUE/FALSE. When TRUE, transposes the plot.}
 }
 \value{
 \code{ggplot2} object displaying the type of values in the data frame and
