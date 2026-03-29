@@ -57,3 +57,27 @@ test_that("data_vis_dat gets the data properly for groups", {
   expect_s3_class(the_vis_dat_data_month, "data.frame")
   expect_snapshot(the_vis_dat_data_month)
 })
+
+test_that("ts_to_df preserves custom attributes", {
+  skip_if_not_installed("tsbox")
+  skip_if_not_installed("xts")
+  skip_if_not_installed("zoo")
+
+  mat <- matrix(1:10, ncol=2)
+  x <- xts::xts(mat, order.by = as.Date("2020-01-01") + 0:4)
+  attr(x, "scale") <- "foo"
+  attr(x, "transform") <- "bar"
+  res_x <- ts_to_df(x)
+  expect_equal(attr(res_x, "scale"), "foo")
+  expect_equal(attr(res_x, "transform"), "bar")
+
+  z <- zoo::zoo(mat, order.by = as.Date("2020-01-01") + 0:4)
+  attr(z, "scale") <- "zoo_scale"
+  res_z <- ts_to_df(z)
+  expect_equal(attr(res_z, "scale"), "zoo_scale")
+
+  y <- ts(mat, start = c(2020, 1), frequency = 12)
+  attr(y, "ts_scale") <- "baz"
+  res_y <- ts_to_df(y)
+  expect_equal(attr(res_y, "ts_scale"), "baz")
+})
