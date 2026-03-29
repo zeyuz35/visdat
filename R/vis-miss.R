@@ -86,7 +86,8 @@ vis_miss.data.frame <- function(
   large_data_size = 900000,
   warn_large_data = TRUE,
   facet,
-  transpose = FALSE
+  transpose = FALSE,
+  ...
 ) {
   test_if_dataframe(x)
   test_if_large_data(x, large_data_size, warn_large_data)

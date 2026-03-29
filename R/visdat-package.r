@@ -35,4 +35,5 @@ globalVariables(c("valueGuess",
                   "cor",
                   "setNames",
                   "rowname",
-                  "n"))
+                  "n",
+                  "time"))
