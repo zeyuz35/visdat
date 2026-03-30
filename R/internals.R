@@ -56,14 +56,14 @@ fingerprint_df <- function(x){
 #' @noRd
 #'
 vis_gather_ <- function(x){
-  x %>%
-    dplyr::mutate(rows = dplyr::row_number()) %>%
+  x |>
+    dplyr::mutate(rows = dplyr::row_number()) |>
     tidyr::pivot_longer(
       cols = -rows,
       names_to = "variable",
       values_to = "valueType",
       values_transform = list(valueType = as.character)
-    ) %>%
+    ) |>
     dplyr::arrange(rows, variable, valueType)
 }
 
