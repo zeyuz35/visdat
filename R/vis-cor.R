@@ -2,19 +2,18 @@
 #'
 #' Visualise correlations amongst variables in your data as a heatmap
 #'
-#' @param data data.frame
-#' @param cor_method correlation method to use, from `cor`: "a character
-#'   string indicating which correlation coefficient (or covariance) is to be
-#'   computed. One of "pearson" (default), "kendall", or "spearman": can be
-#'   abbreviated."
+#' @param data A \code{data.frame} object.
+#' @param cor_method A character string indicating which correlation coefficient
+#'   (or covariance) is to be computed. One of "pearson" (default),
+#'   "kendall", or "spearman" (can be abbreviated).
 #' @param na_action The method for computing covariances when there are missing
 #'   values present. This can be "everything", "all.obs", "complete.obs",
 #'   "na.or.complete", or "pairwise.complete.obs" (default). This option is
-#'   taken from the `cor` function argument `use`.,
-#' @param facet bare unqouted variable to use for facetting
-#' @param ... extra arguments you may want to pass to `cor`
+#'   taken from the \code{cor} function argument \code{use}.
+#' @param facet A bare unquoted variable to use for faceting.
+#' @param ... Extra arguments you may want to pass to \code{cor}.
 #'
-#' @return ggplot2 object
+#' @return A \code{ggplot2} object.
 #'
 #' @export
 #'

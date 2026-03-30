@@ -7,24 +7,23 @@
 vis_cor(data, ...)
 }
 \arguments{
-\item{data}{data.frame}
+\item{data}{A \code{data.frame} object.}
 
-\item{...}{extra arguments you may want to pass to \code{cor}}
+\item{...}{Extra arguments you may want to pass to \code{cor}.}
 
-\item{cor_method}{correlation method to use, from \code{cor}: "a character
-string indicating which correlation coefficient (or covariance) is to be
-computed. One of "pearson" (default), "kendall", or "spearman": can be
-abbreviated."}
+\item{cor_method}{A character string indicating which correlation coefficient
+(or covariance) is to be computed. One of "pearson" (default),
+"kendall", or "spearman" (can be abbreviated).}
 
 \item{na_action}{The method for computing covariances when there are missing
 values present. This can be "everything", "all.obs", "complete.obs",
 "na.or.complete", or "pairwise.complete.obs" (default). This option is
-taken from the \code{cor} function argument \code{use}.,}
+taken from the \code{cor} function argument \code{use}.}
 
-\item{facet}{bare unqouted variable to use for facetting}
+\item{facet}{A bare unquoted variable to use for faceting.}
 }
 \value{
-ggplot2 object
+A \code{ggplot2} object.
 }
 \description{
 Visualise correlations amongst variables in your data as a heatmap

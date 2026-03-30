@@ -13,3 +13,5 @@ LLM/
 scratch/
 smoke/
 
+*.Rcheck/
+*.tar.gz
