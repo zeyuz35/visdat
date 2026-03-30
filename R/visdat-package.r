@@ -20,7 +20,6 @@
 #' @docType package
 #' @importFrom magrittr %>%
 #' @importFrom stats cor
-#' @importFrom stats setNames
 #' @keywords internal
 "_PACKAGE"
 
@@ -33,6 +32,5 @@ globalVariables(c("valueGuess",
                   "row_2",
                   "value",
                   "cor",
-                  "setNames",
                   "rowname",
                   "n"))
