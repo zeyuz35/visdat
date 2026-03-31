@@ -25,43 +25,43 @@
 #' @examples
 #'
 #' dat_test <- tibble::tribble(
-#'             ~x, ~y,
-#'             -1,  "A",
-#'             0,  "B",
-#'             1,  "C",
-#'             NA, NA
-#'             )
+#'   ~x, ~y,
+#'   -1, "A",
+#'   0, "B",
+#'   1, "C",
+#'   NA, NA
+#' )
 #'
-#' vis_expect(dat_test, ~.x == -1)
+#' vis_expect(dat_test, ~ .x == -1)
 #'
-#' vis_expect(airquality, ~.x == 5.1)
+#' vis_expect(airquality, ~ .x == 5.1)
 #'
 #' # explore some common NA strings
 #'
 #' common_nas <- c(
-#' "NA",
-#' "N A",
-#' "N/A",
-#' "na",
-#' "n a",
-#' "n/a"
+#'   "NA",
+#'   "N A",
+#'   "N/A",
+#'   "na",
+#'   "n a",
+#'   "n/a"
 #' )
 #'
-#' dat_ms <- tibble::tribble(~x,  ~y,    ~z,
-#'                          "1",   "A",   -100,
-#'                          "3",   "N/A", -99,
-#'                          "NA",  NA,    -98,
-#'                          "N A", "E",   -101,
-#'                          "na", "F",   -1)
+#' dat_ms <- tibble::tribble(
+#'   ~x, ~y, ~z,
+#'   "1", "A", -100,
+#'   "3", "N/A", -99,
+#'   "NA", NA, -98,
+#'   "N A", "E", -101,
+#'   "na", "F", -1
+#' )
 #'
-#' vis_expect(dat_ms, ~.x %in% common_nas)
-#'
+#' vis_expect(dat_ms, ~ .x %in% common_nas)
 #'
 vis_expect <- function(data, ...) UseMethod("vis_expect")
 
 #' @export
-vis_expect.data.frame <- function(data, expectation, show_perc = TRUE, transpose = FALSE, ...){
-
+vis_expect.data.frame <- function(data, expectation, show_perc = TRUE, transpose = FALSE, ...) {
   test_if_dataframe(data)
 
   data_expect <- expect_frame(data, expectation)
@@ -69,7 +69,6 @@ vis_expect.data.frame <- function(data, expectation, show_perc = TRUE, transpose
   # calculate the overall % expecations to display in legend -------------------
 
   if (show_perc) {
-
     temp <- expect_guide_label(data_expect)
 
     p_expect_true_lab <- temp$p_expect_false_lab
@@ -78,11 +77,9 @@ vis_expect.data.frame <- function(data, expectation, show_perc = TRUE, transpose
 
     # else if show_perc FALSE (do nothing)
   } else {
-
     p_expect_true_lab <- "TRUE"
 
     p_expect_false_lab <- "FALSE"
-
   }
 
   colnames_data <- colnames(data_expect)
@@ -99,27 +96,37 @@ vis_expect.data.frame <- function(data, expectation, show_perc = TRUE, transpose
     dplyr::mutate(variable = factor(variable, levels = colnames_data))
 
   row_labels <- attr(data, "row_labels")
-  
+
   if (!is.null(row_labels)) {
     data_expect$time <- as.Date(row_labels[data_expect$rows])
-    
+
     vis_expect_plot <- data_expect %>%
-      ggplot2::ggplot(ggplot2::aes(x = variable,
-                                   y = time)) +
+      ggplot2::ggplot(ggplot2::aes(
+        x = variable,
+        y = time
+      )) +
       ggplot2::geom_tile(ggplot2::aes(fill = valueType)) +
       ggplot2::theme_minimal() +
-      ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45,
-                                                         vjust = 1,
-                                                         hjust = 1)) +
+      ggplot2::theme(axis.text.x = ggplot2::element_text(
+        angle = 45,
+        vjust = 1,
+        hjust = 1
+      )) +
       ggplot2::scale_y_date(expand = c(0, 0)) +
-      ggplot2::scale_x_discrete(position = ifelse(transpose, "bottom", "top"), limits = if(transpose) rev(colnames_data) else colnames_data) +
-      ggplot2::scale_fill_manual(name = "",
-                                 values = c("#998ec3", # purple
-                                            "#f1a340", # orange
-                                            "grey"),
-                                 labels = c(p_expect_false_lab,
-                                            p_expect_true_lab),
-                                 na.value = "#E5E5E5") + # light gray
+      ggplot2::scale_x_discrete(position = ifelse(transpose, "bottom", "top"), limits = if (transpose) rev(colnames_data) else colnames_data) +
+      ggplot2::scale_fill_manual(
+        name = "",
+        values = c(
+          "#998ec3", # purple
+          "#f1a340", # orange
+          "grey"
+        ),
+        labels = c(
+          p_expect_false_lab,
+          p_expect_true_lab
+        ),
+        na.value = "#E5E5E5"
+      ) + # light gray
       ggplot2::guides(fill = ggplot2::guide_legend(reverse = TRUE, title = "Expectation")) +
       ggplot2::theme(legend.position = "bottom", axis.text.x = ggplot2::element_text(hjust = 0))
 
@@ -129,42 +136,51 @@ vis_expect.data.frame <- function(data, expectation, show_perc = TRUE, transpose
       vis_expect_plot <- vis_expect_plot + ggplot2::coord_trans(y = "reverse")
     }
 
-    vis_expect_plot <- vis_expect_plot + 
-      ggplot2::labs(x = if(transpose) "Time" else "Series", y = if(transpose) "Series" else "Time")
+    vis_expect_plot <- vis_expect_plot +
+      ggplot2::labs(x = if (transpose) "Time" else "Series", y = if (transpose) "Series" else "Time")
   } else {
     vis_expect_plot <- data_expect %>%
-      ggplot2::ggplot(ggplot2::aes(x = variable,
-                                   y = rows)) +
+      ggplot2::ggplot(ggplot2::aes(
+        x = variable,
+        y = rows
+      )) +
       ggplot2::geom_raster(ggplot2::aes(fill = valueType)) +
       ggplot2::theme_minimal() +
-      ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45,
-                                                         vjust = 1,
-                                                         hjust = 1)) +
-      ggplot2::scale_x_discrete(position = ifelse(transpose, "bottom", "top"), limits = if(transpose) rev(colnames_data) else colnames_data) +
-      ggplot2::scale_fill_manual(name = "",
-                                 values = c("#998ec3", # purple
-                                            "#f1a340", # orange
-                                            "grey"),
-                                 labels = c(p_expect_false_lab,
-                                            p_expect_true_lab),
-                                 na.value = "#E5E5E5") + # light gray
+      ggplot2::theme(axis.text.x = ggplot2::element_text(
+        angle = 45,
+        vjust = 1,
+        hjust = 1
+      )) +
+      ggplot2::scale_x_discrete(position = ifelse(transpose, "bottom", "top"), limits = if (transpose) rev(colnames_data) else colnames_data) +
+      ggplot2::scale_fill_manual(
+        name = "",
+        values = c(
+          "#998ec3", # purple
+          "#f1a340", # orange
+          "grey"
+        ),
+        labels = c(
+          p_expect_false_lab,
+          p_expect_true_lab
+        ),
+        na.value = "#E5E5E5"
+      ) + # light gray
       ggplot2::guides(fill = ggplot2::guide_legend(reverse = TRUE, title = "Expectation")) +
       ggplot2::theme(legend.position = "bottom", axis.text.x = ggplot2::element_text(hjust = 0))
 
     if (transpose) {
-      vis_expect_plot <- vis_expect_plot + 
-        ggplot2::coord_flip() + 
+      vis_expect_plot <- vis_expect_plot +
+        ggplot2::coord_flip() +
         ggplot2::scale_y_continuous() +
         ggplot2::labs(x = "Observations", y = "")
     } else {
-      vis_expect_plot <- vis_expect_plot + 
+      vis_expect_plot <- vis_expect_plot +
         ggplot2::scale_y_reverse() +
         ggplot2::labs(x = "", y = "Observations")
     }
   }
 
   vis_expect_plot
-
 }
 
 # Time series methods: convert via tsbox to transposed data.frame, then dispatch.
@@ -229,21 +245,21 @@ vis_expect.default <- function(data, ...) {
 #' @examples
 #' \dontrun{
 #' dat_test <- tibble::tribble(
-#'             ~x, ~y,
-#'             -1,  "A",
-#'             0,  "B",
-#'             1,  "C"
-#'             )
+#'   ~x, ~y,
+#'   -1, "A",
+#'   0, "B",
+#'   1, "C"
+#' )
 #'
-#' expect_frame(dat_test,
-#'              ~ .x == -1)
-#'              }
-expect_frame <- function(data, expectation){
-
+#' expect_frame(
+#'   dat_test,
+#'   ~ .x == -1
+#' )
+#' }
+expect_frame <- function(data, expectation) {
   my_fun <- purrr::as_mapper(expectation)
 
   purrr::map_dfc(data, my_fun)
-
 }
 
 
@@ -260,35 +276,30 @@ expect_frame <- function(data, expectation){
 #' @noRd
 #'
 expect_guide_label <- function(x) {
-
   p_expect <- (mean(as.matrix(x), na.rm = TRUE) * 100)
 
   if (p_expect == 0) {
-
     p_expect_false_lab <- "No Expectations True"
 
     p_expect_true_lab <- "Present (100%)"
-
   } else if (p_expect < 0.1) {
-
     p_expect_false_lab <- "TRUE (< 0.1%)"
 
     p_expect_true_lab <- "FALSE (> 99.9%)"
-
   } else {
-
     # calculate rounded percentages
     p_expect_false <- round(p_expect, 1)
-    p_expect_true <- round(100 - p_expect,1)
+    p_expect_true <- round(100 - p_expect, 1)
 
     # create the labels
     p_expect_false_lab <- glue::glue("TRUE\n({p_expect_false}%)")
     p_expect_true_lab <- glue::glue("FALSE\n({p_expect_true}%)")
   }
 
-  label_frame <- tibble::tibble(p_expect_false_lab,
-                                p_expect_true_lab)
+  label_frame <- tibble::tibble(
+    p_expect_false_lab,
+    p_expect_true_lab
+  )
 
   return(label_frame)
-
 }

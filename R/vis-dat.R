@@ -60,7 +60,7 @@
 #' flights %>%
 #'   slice(1:1000) %>%
 #'   vis_dat()
-#'}
+#' }
 #'
 #' @export
 vis_dat <- function(x, ...) UseMethod("vis_dat")
@@ -73,29 +73,30 @@ vis_dat.data.frame <- function(x,
                                large_data_size = 900000,
                                facet,
                                transpose = FALSE, ...) {
-
   test_if_dataframe(x)
   test_if_large_data(x, large_data_size, warn_large_data)
 
   if (sort_type) {
-
     type_sort <- order(
       # get the class, if there are multiple classes, combine them together
-      purrr::map_chr(.x = x,
-                     .f = function(x) glue::glue_collapse(class(x),
-                                                          sep = "\n"))
+      purrr::map_chr(
+        .x = x,
+        .f = function(x) {
+          glue::glue_collapse(class(x),
+            sep = "\n"
+          )
+        }
+      )
     )
     # get the names of those columns
     col_order_index <- names(x)[type_sort]
-
   } else {
     # this means that the order remains the same as the dataframe.
     col_order_index <- names(x)
-
   }
 
   # reshape the dataframe ready for geom_raster
-  if (!missing(facet)){
+  if (!missing(facet)) {
     vis_dat_data <- x %>%
       dplyr::group_by({{ facet }}) %>%
       data_vis_dat()
@@ -105,7 +106,6 @@ vis_dat.data.frame <- function(x,
       facet,
       environment()
     )
-
   } else {
     vis_dat_data <- data_vis_dat(x)
   }
@@ -122,10 +122,10 @@ vis_dat.data.frame <- function(x,
   if (!is.null(row_labels)) {
     # For time series, map series to x-axis and time to y-axis.
     vis_dat_plot$data$time <- as.Date(row_labels[vis_dat_plot$data$rows])
-    
+
     # Remove geom_raster layer to prevent uneven spacing warnings, use geom_tile instead
     vis_dat_plot$layers[[1]] <- NULL
-    
+
     vis_dat_plot <- vis_dat_plot +
       ggplot2::geom_tile(ggplot2::aes(x = variable, y = time, fill = valueType)) +
       ggplot2::scale_y_date(expand = c(0, 0)) +
@@ -134,15 +134,15 @@ vis_dat.data.frame <- function(x,
         position = ifelse(transpose, "bottom", "top")
       ) +
       ggplot2::theme(axis.text.x = ggplot2::element_text(hjust = 0))
-      
+
     if (transpose) {
       vis_dat_plot <- vis_dat_plot + ggplot2::coord_flip()
     } else {
       vis_dat_plot <- vis_dat_plot + ggplot2::coord_trans(y = "reverse")
     }
-    
-    vis_dat_plot <- vis_dat_plot + 
-      ggplot2::labs(x = if(transpose) "Time" else "Series", y = if(transpose) "Series" else "Time")
+
+    vis_dat_plot <- vis_dat_plot +
+      ggplot2::labs(x = if (transpose) "Time" else "Series", y = if (transpose) "Series" else "Time")
   } else {
     vis_dat_plot <- vis_dat_plot +
       ggplot2::scale_x_discrete(
@@ -152,8 +152,8 @@ vis_dat.data.frame <- function(x,
       ggplot2::theme(axis.text.x = ggplot2::element_text(hjust = 0))
 
     if (transpose) {
-      vis_dat_plot <- vis_dat_plot + 
-        ggplot2::coord_flip() + 
+      vis_dat_plot <- vis_dat_plot +
+        ggplot2::coord_flip() +
         ggplot2::scale_y_continuous() +
         ggplot2::labs(x = "Observations", y = "")
     }
@@ -161,13 +161,12 @@ vis_dat.data.frame <- function(x,
 
   if (!missing(facet)) {
     vis_dat_plot <- vis_dat_plot +
-      ggplot2::facet_wrap(facets = dplyr::vars( {{ facet }} ))
+      ggplot2::facet_wrap(facets = dplyr::vars({{ facet }}))
   }
 
   # specify a palette ----------------------------------------------------------
   add_vis_dat_pal(vis_dat_plot, palette)
-
-  } # close function
+} # close function
 
 # Time series methods: convert via tsbox to transposed data.frame, then dispatch.
 #' @export

@@ -28,7 +28,7 @@ vis_binary(dat_bin)
 
 # changing order of variables
 # create numeric names
-df <-  setNames(dat_bin, c("1.1", "8.9", "10.4"))
+df <- setNames(dat_bin, c("1.1", "8.9", "10.4"))
 df
 
 # not ideal
