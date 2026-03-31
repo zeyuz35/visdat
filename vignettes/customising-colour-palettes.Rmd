@@ -43,7 +43,8 @@ vis_dat(typical_data) +
       "logical" = "green",
       "numeric" = "purple",
       "NA" = "gray"
-  ))
+    )
+  )
 ```
 
 This is a pretty, uh, "popping" set of colours? You can also use some hex colours instead.
@@ -64,7 +65,8 @@ vis_dat(typical_data) +
       "logical" = "#28E2E5",
       "numeric" = "#CD0BBC",
       "NA" = "#F5C710"
-  ))
+    )
+  )
 ```
 
 

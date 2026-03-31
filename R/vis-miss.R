@@ -187,23 +187,23 @@ vis_miss.data.frame <- function(
   if (!is.null(row_labels)) {
     # For time series, map series to x-axis and time to y-axis.
     vis_miss_plot$data$time <- as.Date(row_labels[vis_miss_plot$data$rows])
-    
+
     # Remove geom_raster layer to prevent uneven spacing warnings, use geom_tile instead
     vis_miss_plot$layers[[1]] <- NULL
-    
+
     vis_miss_plot <- vis_miss_plot +
       ggplot2::geom_tile(ggplot2::aes(x = variable, y = time, fill = valueType)) +
       ggplot2::scale_y_date(expand = c(0, 0))
-      
+
     if (transpose) {
       vis_miss_plot <- vis_miss_plot + ggplot2::coord_flip()
     } else {
       vis_miss_plot <- vis_miss_plot + ggplot2::coord_trans(y = "reverse")
     }
-    
-    vis_miss_plot <- vis_miss_plot + 
-      ggplot2::labs(x = if(transpose) "Time" else "Series", y = if(transpose) "Series" else "Time")
-      
+
+    vis_miss_plot <- vis_miss_plot +
+      ggplot2::labs(x = if (transpose) "Time" else "Series", y = if (transpose) "Series" else "Time")
+
     if (show_perc_col && missing(facet)) {
       vis_miss_plot <- vis_miss_plot +
         ggplot2::scale_x_discrete(
@@ -220,12 +220,12 @@ vis_miss.data.frame <- function(
     }
   } else {
     if (transpose) {
-      vis_miss_plot <- vis_miss_plot + 
-        ggplot2::coord_flip() + 
+      vis_miss_plot <- vis_miss_plot +
+        ggplot2::coord_flip() +
         ggplot2::scale_y_continuous() +
         ggplot2::labs(x = "Observations", y = "")
     }
-    
+
     if (show_perc_col && missing(facet)) {
       # flip the axes, add the info about limits
       vis_miss_plot <- vis_miss_plot +
@@ -253,35 +253,43 @@ vis_miss.data.frame <- function(
 
 
 # Time series methods: convert via tsbox to transposed data.frame, then dispatch.
+#' @export
 vis_miss.ts <- function(x, ...) {
   y <- ts_to_df(x)
   vis_miss.data.frame(y, ...)
 }
 
+#' @export
 vis_miss.mts <- function(x, ...) {
   vis_miss.data.frame(ts_to_df(x), ...)
 }
 
+#' @export
 vis_miss.zoo <- function(x, ...) {
   vis_miss.data.frame(ts_to_df(x), ...)
 }
 
+#' @export
 vis_miss.xts <- function(x, ...) {
   vis_miss.data.frame(ts_to_df(x), ...)
 }
 
+#' @export
 vis_miss.tbl_ts <- function(x, ...) {
   vis_miss.data.frame(ts_to_df(x), ...)
 }
 
+#' @export
 vis_miss.tbl_df <- function(x, ...) {
   vis_miss.data.frame(as.data.frame(x), ...)
 }
 
+#' @export
 vis_miss.tsibble <- function(x, ...) {
   vis_miss.data.frame(ts_to_df(x), ...)
 }
 
+#' @export
 vis_miss.default <- function(x, ...) {
   if (tsbox::ts_boxable(x)) {
     vis_miss.data.frame(ts_to_df(x), ...)

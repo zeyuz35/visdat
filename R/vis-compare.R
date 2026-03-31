@@ -23,8 +23,7 @@
 vis_compare <- function(df1, df2, ...) UseMethod("vis_compare")
 
 #' @export
-vis_compare.data.frame <- function(df1, df2, transpose = FALSE, ...){
-
+vis_compare.data.frame <- function(df1, df2, transpose = FALSE, ...) {
   # could add a parameter, sort_match, to help with
   # sort_match logical TRUE/FALSE.
   # TRUE arranges the columns in order of most matches.
@@ -39,7 +38,7 @@ vis_compare.data.frame <- function(df1, df2, transpose = FALSE, ...){
         {.arg df2}",
         "The dimensions of {.arg df1} are: {dim(df1)}",
         "The dimensions of {.arg df2} are: {dim(df2)}"
-        )
+      )
     )
   }
 
@@ -51,62 +50,79 @@ vis_compare.data.frame <- function(df1, df2, transpose = FALSE, ...){
     as.data.frame() %>%
     purrr::map_df(compare_print) %>%
     vis_gather_() %>%
-    dplyr::mutate(value_df1 = vis_extract_value_(df1),
-                  value_df2 = vis_extract_value_(df2))
+    dplyr::mutate(
+      value_df1 = vis_extract_value_(df1),
+      value_df2 = vis_extract_value_(df2)
+    )
 
   # then we plot it
-  vis_compare_plot <- ggplot2::ggplot(data = d,
-                                      ggplot2::aes(
-                                        x = variable,
-                                        y = rows)) +
+  vis_compare_plot <- ggplot2::ggplot(
+    data = d,
+    ggplot2::aes(
+      x = variable,
+      y = rows
+    )
+  ) +
     ggplot2::geom_raster(ggplot2::aes(fill = valueType)) +
     ggplot2::theme_minimal() +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45,
-                                                       vjust = 1,
-                                                       hjust = 1)) +
-    ggplot2::labs(x = "",
-                  y = "Observations",
-                  fill = "Cell Type") +
-    ggplot2::scale_fill_manual(limits = c("same",
-                                          "different"),
-                               breaks = c("same",
-                                          "different"),
-                               values = c("#fc8d59",
-                                          "#91bfdb"),
-                               na.value = "grey") +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(
+      angle = 45,
+      vjust = 1,
+      hjust = 1
+    )) +
+    ggplot2::labs(
+      x = "",
+      y = "Observations",
+      fill = "Cell Type"
+    ) +
+    ggplot2::scale_fill_manual(
+      limits = c(
+        "same",
+        "different"
+      ),
+      breaks = c(
+        "same",
+        "different"
+      ),
+      values = c(
+        "#fc8d59",
+        "#91bfdb"
+      ),
+      na.value = "grey"
+    ) +
     ggplot2::guides(fill = ggplot2::guide_legend(reverse = TRUE, title = "Cell Type"))
 
   row_labels <- attr(df1, "row_labels")
-  
+
   if (!is.null(row_labels)) {
     vis_compare_plot$data$time <- as.Date(row_labels[vis_compare_plot$data$rows])
     vis_compare_plot$layers[[1]] <- NULL
-    
+
     vis_compare_plot <- vis_compare_plot +
       ggplot2::geom_tile(ggplot2::aes(x = variable, y = time, fill = valueType)) +
       ggplot2::scale_y_date(expand = c(0, 0)) +
-      ggplot2::scale_x_discrete(position = ifelse(transpose, "bottom", "top"), limits = if(transpose) rev(names(df_diff)) else names(df_diff)) +
+      ggplot2::scale_x_discrete(position = ifelse(transpose, "bottom", "top"), limits = if (transpose) rev(names(df_diff)) else names(df_diff)) +
       ggplot2::theme(axis.text.x = ggplot2::element_text(hjust = 0.25))
-      
+
     if (transpose) {
       vis_compare_plot <- vis_compare_plot + ggplot2::coord_flip()
     } else {
       vis_compare_plot <- vis_compare_plot + ggplot2::coord_trans(y = "reverse")
     }
-    vis_compare_plot <- vis_compare_plot + 
-      ggplot2::labs(x = if(transpose) "Time" else "Series", y = if(transpose) "Series" else "Time")
+    vis_compare_plot <- vis_compare_plot +
+      ggplot2::labs(x = if (transpose) "Time" else "Series", y = if (transpose) "Series" else "Time")
   } else {
     vis_compare_plot <- vis_compare_plot +
-      ggplot2::scale_x_discrete(position = ifelse(transpose, "bottom", "top"), limits = if(transpose) rev(names(df_diff)) else names(df_diff)) +
+      ggplot2::scale_x_discrete(position = ifelse(transpose, "bottom", "top"), limits = if (transpose) rev(names(df_diff)) else names(df_diff)) +
       ggplot2::theme(axis.text.x = ggplot2::element_text(hjust = 0.25))
 
     if (transpose) {
-      vis_compare_plot <- vis_compare_plot + 
-        ggplot2::coord_flip() + 
+      vis_compare_plot <- vis_compare_plot +
+        ggplot2::coord_flip() +
         ggplot2::scale_y_continuous() +
         ggplot2::labs(x = "Observations", y = "")
     } else {
-      vis_compare_plot <- vis_compare_plot + 
+      vis_compare_plot <- vis_compare_plot +
         ggplot2::scale_y_reverse() +
         ggplot2::labs(x = "", y = "Observations")
     }
@@ -178,13 +194,10 @@ vis_compare.default <- function(df1, df2, ...) {
 #' @keywords internal
 #' @noRd
 #'
-compare_print <- function(x){
-
+compare_print <- function(x) {
   dplyr::if_else(x == "TRUE",
-                 true = "same",
-                 false = "different",
-                 missing = "missing")
-
-
+    true = "same",
+    false = "different",
+    missing = "missing"
+  )
 } # end function
-

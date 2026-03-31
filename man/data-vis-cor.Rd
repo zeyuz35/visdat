@@ -50,7 +50,7 @@ Create a tidy dataframe of correlations suitable for plotting
 data_vis_cor(airquality)
 
 \dontrun{
-#return vis_dat data for each group
+# return vis_dat data for each group
 library(dplyr)
 airquality \%>\%
   group_by(Month) \%>\%

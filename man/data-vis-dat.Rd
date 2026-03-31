@@ -31,7 +31,7 @@ Return data used to create vis_dat plot
 data_vis_dat(airquality)
 
 \dontrun{
-#return vis_dat data for each group
+# return vis_dat data for each group
 library(dplyr)
 airquality \%>\%
   group_by(Month) \%>\%
