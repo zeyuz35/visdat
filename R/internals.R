@@ -23,7 +23,7 @@ fingerprint <- function(x){
                                     sep = "\n")
     )
   } else {
-    ifelse(purrr::map_lgl(x,~length(.x)==0),
+    ifelse(purrr::map_lgl(x, \(list_item) length(list_item) == 0),
            # yes? Leave as is NA
            yes = NA,
            # no? make that value no equal to the class of this cell.
@@ -56,14 +56,14 @@ fingerprint_df <- function(x){
 #' @noRd
 #'
 vis_gather_ <- function(x){
-  x %>%
-    dplyr::mutate(rows = dplyr::row_number()) %>%
+  x |>
+    dplyr::mutate(rows = dplyr::row_number()) |>
     tidyr::pivot_longer(
       cols = -rows,
       names_to = "variable",
       values_to = "valueType",
       values_transform = list(valueType = as.character)
-    ) %>%
+    ) |>
     dplyr::arrange(rows, variable, valueType)
 }
 
@@ -227,13 +227,13 @@ label_col_missing_pct <- function(x,
 
   # present everything in the right order
 
-  labelled_pcts <- colMeans(is.na(x))[col_order_index] %>%
-    purrr::map_chr(function(x){
+  labelled_pcts <- colMeans(is.na(x))[col_order_index] |>
+    purrr::map_chr(\(pct){
       dplyr::case_when(
-        x == 0 ~  "0%",
-        x < 0.001 ~ "<0.1%",
-        x < 0.01 ~ "<1%",
-        x >= 0.01 ~ scales::percent(x, accuracy = 1),
+        pct == 0 ~  "0%",
+        pct < 0.001 ~ "<0.1%",
+        pct < 0.01 ~ "<1%",
+        pct >= 0.01 ~ scales::percent(pct, accuracy = 1),
       )
     })
 
@@ -390,8 +390,8 @@ scale_01 <- function(x) {
 }
 
 group_by_fun <- function(data,.fun, ...){
-  tidyr::nest(data) %>%
-    dplyr::mutate(data = purrr::map(data, .fun, ...)) %>%
+  tidyr::nest(data) |>
+    dplyr::mutate(data = purrr::map(data, .fun, ...)) |>
     tidyr::unnest(cols = c(data))
 }
 
