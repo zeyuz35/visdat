@@ -5,13 +5,11 @@ output: github_document
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r setup, echo = FALSE}
-
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-"
 )
-
 ```
 
 # visdat <img src="man/figures/visdat-logo.png" align="right" />
@@ -25,15 +23,12 @@ knitr::opts_chunk$set(
 visdat is available on CRAN
 
 ```{r install-cran, eval = FALSE}
-
 install.packages("visdat")
-
 ```
 
 If you would like to use the development version, install from github with:
 
 ```{r installation, eval = FALSE}
-
 # install.packages("devtools")
 devtools::install_github("ropensci/visdat")
 ```
@@ -85,11 +80,9 @@ September 1973. More information about the dataset can be found with
 `?airquality`.
 
 ```{r vis-dat-aq}
-
 library(visdat)
 
 vis_dat(airquality)
-
 ```
 
 The plot above tells us that R reads this dataset as having numeric and integer
@@ -110,9 +103,7 @@ These currently also exist for `vis_miss()`, and the `vis_cor()` functions.
 We can explore the missing data further using `vis_miss()`:
 
 ```{r vis-miss-aq}
-
 vis_miss(airquality)
-
 ```
 
 Percentages of missing/complete in `vis_miss` are accurate to the integer (whole number). To get more accurate and thorough exploratory summaries of missingness, I would recommend the [`naniar`](https://github.com/njtierney/naniar) R package
@@ -120,41 +111,37 @@ Percentages of missing/complete in `vis_miss` are accurate to the integer (whole
 You can cluster the missingness by setting `cluster = TRUE`:
 
 ```{r vis-miss-aq-cluster}
-
-vis_miss(airquality, 
-         cluster = TRUE)
-
+vis_miss(airquality,
+  cluster = TRUE
+)
 ```
 
 Columns can also be arranged by columns with most missingness, by setting
 `sort_miss = TRUE`:
 
 ```{r vis-miss-aq-sort-miss}
-
 vis_miss(airquality,
-         sort_miss = TRUE)
-
+  sort_miss = TRUE
+)
 ```
 
 `vis_miss` indicates when there is a very small amount of missing data at <0.1%
 missingness:
 
 ```{r vis-miss-test}
-
-test_miss_df <- data.frame(x1 = 1:10000,
-                           x2 = rep("A", 10000),
-                           x3 = c(rep(1L, 9999), NA))
+test_miss_df <- data.frame(
+  x1 = 1:10000,
+  x2 = rep("A", 10000),
+  x3 = c(rep(1L, 9999), NA)
+)
 
 vis_miss(test_miss_df)
-
 ```
 
 `vis_miss` will also indicate when there is no missing data at all:
 
 ```{r vis-miss-mtcars}
-
 vis_miss(mtcars)
-
 ```
 
 To further explore the missingness structure in a dataset, I recommend the
@@ -168,12 +155,11 @@ Sometimes you want to see what has changed in your data. `vis_compare()` display
 Let's make some changes to the `chickwts`, and compare this new dataset:
 
 ```{r vis-compare-iris}
-set.seed(2019-04-03-1105)
+set.seed(2019 - 04 - 03 - 1105)
 chickwts_diff <- chickwts
-chickwts_diff[sample(1:nrow(chickwts), 30),sample(1:ncol(chickwts), 2)] <- NA
+chickwts_diff[sample(1:nrow(chickwts), 30), sample(1:ncol(chickwts), 2)] <- NA
 
 vis_compare(chickwts_diff, chickwts)
-
 ```
 
 Here the differences are marked in blue.
@@ -182,12 +168,11 @@ If you try and compare differences when the dimensions are different, you get
 an ugly error:
 
 ```{r vis-compare-error, eval = FALSE}
-
 chickwts_diff_2 <- chickwts
-chickwts_diff_2$new_col <- chickwts_diff_2$weight*2
+chickwts_diff_2$new_col <- chickwts_diff_2$weight * 2
 
 vis_compare(chickwts, chickwts_diff_2)
-# Error in vis_compare(chickwts, chickwts_diff_2) : 
+# Error in vis_compare(chickwts, chickwts_diff_2) :
 #   Dimensions of df1 and df2 are not the same. vis_compare requires dataframes of identical dimensions.
 ```
 
@@ -201,9 +186,7 @@ see if there are times where the  values in your data are greater than or equal
 to 25:
 
 ```{r vis-expect}
-
-vis_expect(airquality, ~.x >= 25)
-
+vis_expect(airquality, ~ .x >= 25)
 ```
 
 This shows the proportion of times that there are values greater than 25, as
@@ -214,9 +197,7 @@ well as the missings.
 To make it easy to plot correlations of your data, use `vis_cor`:
 
 ```{r vis-cor}
-
 vis_cor(airquality)
-
 ```
 
 ## Using `vis_value`
@@ -274,38 +255,38 @@ Error in test_if_all_binary(data) :
 some messy data, which we'll make here:
 
 ```{r create-messy-vec}
+messy_vector <- c(
+  TRUE,
+  T,
+  "TRUE",
+  "T",
+  "01/01/01",
+  "01/01/2001",
+  NA,
+  NaN,
+  "NA",
+  "Na",
+  "na",
+  "10",
+  10,
+  "10.1",
+  10.1,
+  "abc",
+  "$%TG"
+)
 
-messy_vector <- c(TRUE,
-                  T,
-                  "TRUE",
-                  "T",
-                  "01/01/01",
-                  "01/01/2001",
-                  NA,
-                  NaN,
-                  "NA",
-                  "Na",
-                  "na",
-                  "10",
-                  10,
-                  "10.1",
-                  10.1,
-                  "abc",
-                  "$%TG")
-
-set.seed(2019-04-03-1106)
-messy_df <- data.frame(var1 = messy_vector,
-                       var2 = sample(messy_vector),
-                       var3 = sample(messy_vector))
-
+set.seed(2019 - 04 - 03 - 1106)
+messy_df <- data.frame(
+  var1 = messy_vector,
+  var2 = sample(messy_vector),
+  var3 = sample(messy_vector)
+)
 ```
 
 
 ```{r vis-guess-messy-df, fig.show='hold', out.width='50%'}
-
 vis_guess(messy_df)
 vis_dat(messy_df)
-
 ```
 
 So here we see that there are many different kinds of data in your dataframe. As

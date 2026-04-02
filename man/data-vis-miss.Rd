@@ -37,7 +37,7 @@ Create a tidy dataframe of missing data suitable for plotting
 data_vis_miss(airquality)
 
 \dontrun{
-#return vis_dat data for each group
+# return vis_dat data for each group
 library(dplyr)
 airquality \%>\%
   group_by(Month) \%>\%

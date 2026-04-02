@@ -33,37 +33,38 @@ they are using \code{vis_expect(data, ~.x \%in\% bad_strings)} where
 \examples{
 
 dat_test <- tibble::tribble(
-            ~x, ~y,
-            -1,  "A",
-            0,  "B",
-            1,  "C",
-            NA, NA
-            )
+  ~x, ~y,
+  -1, "A",
+  0, "B",
+  1, "C",
+  NA, NA
+)
 
-vis_expect(dat_test, ~.x == -1)
+vis_expect(dat_test, ~ .x == -1)
 
-vis_expect(airquality, ~.x == 5.1)
+vis_expect(airquality, ~ .x == 5.1)
 
 # explore some common NA strings
 
 common_nas <- c(
-"NA",
-"N A",
-"N/A",
-"na",
-"n a",
-"n/a"
+  "NA",
+  "N A",
+  "N/A",
+  "na",
+  "n a",
+  "n/a"
 )
 
-dat_ms <- tibble::tribble(~x,  ~y,    ~z,
-                         "1",   "A",   -100,
-                         "3",   "N/A", -99,
-                         "NA",  NA,    -98,
-                         "N A", "E",   -101,
-                         "na", "F",   -1)
+dat_ms <- tibble::tribble(
+  ~x, ~y, ~z,
+  "1", "A", -100,
+  "3", "N/A", -99,
+  "NA", NA, -98,
+  "N A", "E", -101,
+  "na", "F", -1
+)
 
-vis_expect(dat_ms, ~.x \%in\% common_nas)
-
+vis_expect(dat_ms, ~ .x \%in\% common_nas)
 
 }
 \seealso{

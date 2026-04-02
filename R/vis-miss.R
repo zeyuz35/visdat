@@ -187,23 +187,23 @@ vis_miss.data.frame <- function(
   if (!is.null(row_labels)) {
     # For time series, map series to x-axis and time to y-axis.
     vis_miss_plot$data$time <- as.Date(row_labels[vis_miss_plot$data$rows])
-    
+
     # Remove geom_raster layer to prevent uneven spacing warnings, use geom_tile instead
     vis_miss_plot$layers[[1]] <- NULL
-    
+
     vis_miss_plot <- vis_miss_plot +
       ggplot2::geom_tile(ggplot2::aes(x = variable, y = time, fill = valueType)) +
       ggplot2::scale_y_date(expand = c(0, 0))
-      
+
     if (transpose) {
       vis_miss_plot <- vis_miss_plot + ggplot2::coord_flip()
     } else {
       vis_miss_plot <- vis_miss_plot + ggplot2::coord_trans(y = "reverse")
     }
-    
-    vis_miss_plot <- vis_miss_plot + 
-      ggplot2::labs(x = NULL, y = if(transpose) "Series" else "Time")
-      
+
+    vis_miss_plot <- vis_miss_plot +
+      ggplot2::labs(x = NULL, y = if (transpose) "Series" else "Time")
+
     if (show_perc_col && missing(facet)) {
       vis_miss_plot <- vis_miss_plot +
         ggplot2::scale_x_discrete(
@@ -218,17 +218,17 @@ vis_miss.data.frame <- function(
           limits = if (transpose) rev(col_order_index) else col_order_index
         )
     }
-    
-    vis_miss_plot <- vis_miss_plot + 
+
+    vis_miss_plot <- vis_miss_plot +
       ggplot2::theme(axis.text.x = ggplot2::element_text(vjust = 0))
   } else {
     if (transpose) {
-      vis_miss_plot <- vis_miss_plot + 
-        ggplot2::coord_flip() + 
+      vis_miss_plot <- vis_miss_plot +
+        ggplot2::coord_flip() +
         ggplot2::scale_y_continuous() +
         ggplot2::labs(x = "Observations", y = "")
     }
-    
+
     if (show_perc_col && missing(facet)) {
       # flip the axes, add the info about limits
       vis_miss_plot <- vis_miss_plot +

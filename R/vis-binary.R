@@ -14,7 +14,7 @@
 #'
 #' # changing order of variables
 #' # create numeric names
-#' df <-  setNames(dat_bin, c("1.1", "8.9", "10.4"))
+#' df <- setNames(dat_bin, c("1.1", "8.9", "10.4"))
 #' df
 #'
 #' # not ideal
@@ -31,54 +31,59 @@ vis_binary.data.frame <- function(data,
                                   col_na = "grey90",
                                   order = NULL,
                                   transpose = FALSE, ...) {
-
   test_if_all_binary(data)
 
   vis_binary_plot <- data %>%
     vis_gather_() %>%
     dplyr::mutate(value = vis_extract_value_(data)) %>%
-    dplyr::mutate(valueType = forcats::as_factor(valueType),
-                  value = forcats::as_factor(value),
-                  variable = forcats::fct_relevel(variable, order)) %>%
+    dplyr::mutate(
+      valueType = forcats::as_factor(valueType),
+      value = forcats::as_factor(value),
+      variable = forcats::fct_relevel(variable, order)
+    ) %>%
     vis_create_() +
     # change the limits etc.
     ggplot2::guides(fill = ggplot2::guide_legend(title = "Value")) +
-    ggplot2::scale_fill_manual(values = c(col_zero, # zero
-                                          col_one), # one
-                               na.value = col_na)
+    ggplot2::scale_fill_manual(
+      values = c(
+        col_zero, # zero
+        col_one
+      ), # one
+      na.value = col_na
+    )
 
   row_labels <- attr(data, "row_labels")
-  
+
   if (!is.null(row_labels)) {
     vis_binary_plot$data$time <- as.Date(row_labels[vis_binary_plot$data$rows])
     vis_binary_plot$layers[[1]] <- NULL
-    
+
     vis_binary_plot <- vis_binary_plot +
       ggplot2::geom_tile(ggplot2::aes(x = variable, y = time, fill = valueType)) +
       ggplot2::scale_y_date(expand = c(0, 0)) +
-      ggplot2::scale_x_discrete(position = ifelse(transpose, "bottom", "top"), limits = if(transpose) rev(names(data)) else names(data)) +
+      ggplot2::scale_x_discrete(position = ifelse(transpose, "bottom", "top"), limits = if (transpose) rev(names(data)) else names(data)) +
       ggplot2::theme(axis.text.x = ggplot2::element_text(hjust = 0))
-      
+
     if (transpose) {
       vis_binary_plot <- vis_binary_plot + ggplot2::coord_flip()
     } else {
       vis_binary_plot <- vis_binary_plot + ggplot2::coord_trans(y = "reverse")
     }
-    vis_binary_plot <- vis_binary_plot + 
-      ggplot2::labs(x = if(transpose) "Time" else "Series", y = if(transpose) "Series" else "Time")
+    vis_binary_plot <- vis_binary_plot +
+      ggplot2::labs(x = if (transpose) "Time" else "Series", y = if (transpose) "Series" else "Time")
   } else {
     vis_binary_plot <- vis_binary_plot +
-      ggplot2::scale_x_discrete(position = ifelse(transpose, "bottom", "top"), limits = if(transpose) rev(names(data)) else names(data)) +
+      ggplot2::scale_x_discrete(position = ifelse(transpose, "bottom", "top"), limits = if (transpose) rev(names(data)) else names(data)) +
       ggplot2::theme(axis.text.x = ggplot2::element_text(hjust = 0))
 
     if (transpose) {
-      vis_binary_plot <- vis_binary_plot + 
-        ggplot2::coord_flip() + 
+      vis_binary_plot <- vis_binary_plot +
+        ggplot2::coord_flip() +
         ggplot2::scale_y_continuous() +
         ggplot2::labs(x = "Observations", y = "")
     }
   }
-  
+
   vis_binary_plot
 }
 
