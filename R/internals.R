@@ -501,5 +501,14 @@ ts_to_df <- function(x) {
 
   # store time index as row labels for plotting x axis
   attr(series_df, "row_labels") <- time_idx
+
+  # preserve custom attributes from original time series
+  original_attrs <- attributes(x)
+  if (!is.null(original_attrs)) {
+    structural_attrs <- c("dim", "dimnames", "tsp", "class", "names", "row.names", "index", "indexClass", "tclass", "tzone")
+    custom_attrs <- original_attrs[setdiff(names(original_attrs), structural_attrs)]
+    attributes(series_df) <- utils::modifyList(attributes(series_df), custom_attrs)
+  }
+
   series_df
 }
