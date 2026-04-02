@@ -202,7 +202,7 @@ vis_miss.data.frame <- function(
     }
     
     vis_miss_plot <- vis_miss_plot + 
-      ggplot2::labs(x = if(transpose) "Time" else "Series", y = if(transpose) "Series" else "Time")
+      ggplot2::labs(x = NULL, y = if(transpose) "Series" else "Time")
       
     if (show_perc_col && missing(facet)) {
       vis_miss_plot <- vis_miss_plot +
@@ -218,6 +218,9 @@ vis_miss.data.frame <- function(
           limits = if (transpose) rev(col_order_index) else col_order_index
         )
     }
+    
+    vis_miss_plot <- vis_miss_plot + 
+      ggplot2::theme(axis.text.x = ggplot2::element_text(vjust = 0))
   } else {
     if (transpose) {
       vis_miss_plot <- vis_miss_plot + 
