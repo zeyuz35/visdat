@@ -253,35 +253,43 @@ vis_miss.data.frame <- function(
 
 
 # Time series methods: convert via tsbox to transposed data.frame, then dispatch.
+#' @export
 vis_miss.ts <- function(x, ...) {
   y <- ts_to_df(x)
   vis_miss.data.frame(y, ...)
 }
 
+#' @export
 vis_miss.mts <- function(x, ...) {
   vis_miss.data.frame(ts_to_df(x), ...)
 }
 
+#' @export
 vis_miss.zoo <- function(x, ...) {
   vis_miss.data.frame(ts_to_df(x), ...)
 }
 
+#' @export
 vis_miss.xts <- function(x, ...) {
   vis_miss.data.frame(ts_to_df(x), ...)
 }
 
+#' @export
 vis_miss.tbl_ts <- function(x, ...) {
   vis_miss.data.frame(ts_to_df(x), ...)
 }
 
+#' @export
 vis_miss.tbl_df <- function(x, ...) {
   vis_miss.data.frame(as.data.frame(x), ...)
 }
 
+#' @export
 vis_miss.tsibble <- function(x, ...) {
   vis_miss.data.frame(ts_to_df(x), ...)
 }
 
+#' @export
 vis_miss.default <- function(x, ...) {
   if (tsbox::ts_boxable(x)) {
     vis_miss.data.frame(ts_to_df(x), ...)
