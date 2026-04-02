@@ -1,5 +1,3 @@
-source("../../R/internals.R")
-
 test_that("ts_to_df preserves custom attributes for ts", {
   skip_if_not_installed("tsbox")
   x <- ts(matrix(1:10, ncol=2), start = 1990)
