@@ -1,5 +1,3 @@
-context("transpose and coordinate flips")
-
 test_that("vis_miss handles transpose correctly on data.frame", {
   p_df <- vis_miss(mtcars, transpose = TRUE)
   expect_s3_class(p_df, "ggplot")

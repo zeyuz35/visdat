@@ -149,7 +149,7 @@ vis_miss.data.frame <- function(
     ggplot2::guides(fill = ggplot2::guide_legend(reverse = TRUE)) +
     ggplot2::theme(legend.position = "bottom") +
     # fix up the location of the text
-    ggplot2::theme(axis.text.x = ggplot2::element_text(hjust = 0))
+    ggplot2::theme(axis.text.x = ggplot2::element_text(hjust = 0, vjust = 0))
 
   # add the missingness column labels
 
@@ -198,7 +198,7 @@ vis_miss.data.frame <- function(
     if (transpose) {
       vis_miss_plot <- vis_miss_plot + ggplot2::coord_flip()
     } else {
-      vis_miss_plot <- vis_miss_plot + ggplot2::coord_trans(y = "reverse")
+      vis_miss_plot <- vis_miss_plot + ggplot2::coord_transform(y = "reverse")
     }
     
     vis_miss_plot <- vis_miss_plot + 
@@ -218,9 +218,6 @@ vis_miss.data.frame <- function(
           limits = if (transpose) rev(col_order_index) else col_order_index
         )
     }
-    
-    vis_miss_plot <- vis_miss_plot + 
-      ggplot2::theme(axis.text.x = ggplot2::element_text(vjust = 0))
   } else {
     if (transpose) {
       vis_miss_plot <- vis_miss_plot + 

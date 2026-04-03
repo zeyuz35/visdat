@@ -79,7 +79,7 @@ vis_guess.data.frame <- function(x, palette = "default", transpose = FALSE, ...)
     if (transpose) {
       vis_plot <- vis_plot + ggplot2::coord_flip()
     } else {
-      vis_plot <- vis_plot + ggplot2::coord_trans(y = "reverse")
+      vis_plot <- vis_plot + ggplot2::coord_transform(y = "reverse")
     }
     
     vis_plot <- vis_plot + 

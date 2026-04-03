@@ -65,7 +65,7 @@ vis_value.data.frame <- function(data,
     if (transpose) {
       vis_value_plot <- vis_value_plot + ggplot2::coord_flip()
     } else {
-      vis_value_plot <- vis_value_plot + ggplot2::coord_trans(y = "reverse")
+      vis_value_plot <- vis_value_plot + ggplot2::coord_transform(y = "reverse")
     }
     vis_value_plot <- vis_value_plot + 
       ggplot2::labs(x = if(transpose) "Time" else "Series", y = if(transpose) "Series" else "Time")

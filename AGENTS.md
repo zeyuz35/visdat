@@ -21,6 +21,152 @@ Notice that time series data has some specific requirements:
 - The "row id" instead of being numeric, now corresponds to proper time indices, 
 and should be correctly formatted to something appropriate 
 
+---
+
+## Project Structure
+
+```
+visdat/
+├── R/                    # Core package functions (17 files)
+│   ├── vis-*.R           # Main vis_* user-facing functions (S3 generics + methods)
+│   ├── internals.R       # Internal helpers (fingerprint, plotting, validation)
+│   ├── utils-pipe.R      # Pipe operator export
+│   ├── abbreviate.R      # Class label abbreviation helper
+│   ├── data-*.R          # Bundled example data definitions
+│   └── visdat-package.r  # Package-level documentation
+├── tests/testthat/       # Unit tests (testthat edition 3)
+│   ├── test-*.R          # Test files matching R/ function names
+│   └── _snaps/           # Visual snapshot tests (vdiffr)
+├── smoke/                # Smoke test scripts (quick sanity checks)
+├── man/                  # Auto-generated Rd documentation
+├── vignettes/            # Package vignettes
+├── data-raw/             # Raw data import scripts
+├── docs/                 # pkgdown documentation site (auto-generated)
+└── README-figs/          # README figure assets
+```
+
+## Where to Look
+
+| Task | Location | Notes |
+|------|----------|-------|
+| Add new vis_* function | R/vis-<name>.R | Follow S3 generic + method pattern |
+| Add internal helper | R/internals.R | Or create new R/ file if large |
+| Add test | tests/testthat/test-<name>.R | Mirror R/ file naming |
+| Add visual snapshot test | tests/testthat/ + _snaps/ | Use vdiffr |
+| Smoke test | smoke/smoke_vis_<name>.R | Quick sanity check scripts |
+| Example data | R/data-*.R | Define with `data()` |
+| Package docs | vignettes/, README.Rmd | pkgdown builds to docs/ |
+
+## Code Conventions (This Project)
+
+### Function Naming
+- All user-facing functions use `vis_` prefix with hyphens: `vis_miss()`, `vis_dat()`, `vis_compare()`
+- Internal helpers use underscore suffix: `vis_gather_()`, `vis_create_()`, `vis_extract_value_()`
+- Validation functions use `test_if_*` prefix: `test_if_dataframe()`, `test_if_large_data()`
+- S3 methods dispatch on input class: `vis_miss.data.frame`, `vis_miss.ts`, `vis_miss.zoo`, etc.
+
+### S3 Method Pattern
+Every `vis_*` function follows this structure:
+1. Generic: `vis_name <- function(x, ...) UseMethod("vis_name")`
+2. Primary method: `vis_name.data.frame` (main implementation)
+3. Time series methods: `vis_name.ts`, `vis_name.mts`, `vis_name.zoo`, `vis_name.xts`, `vis_name.tbl_ts`, `vis_name.tsibble`
+4. Default method: `vis_name.default` with `tsbox::ts_boxable()` fallback
+5. All non-data.frame methods convert via `ts_to_df()` then dispatch to `.data.frame` method
+
+### ggplot2 Usage
+- All visualisations return `ggplot2` objects
+- Use `ggplot2::geom_raster()` for grid-based plots, `ggplot2::geom_tile()` for time series
+- Time series: map time index to y-axis with `scale_y_date()` or `scale_y_reverse()`
+- Fill aesthetic maps to `valueType` (class labels or missingness)
+- Custom palettes via `add_vis_dat_pal()` (qual, cb_safe, default)
+
+### Input Validation
+- Use `cli::cli_abort()` with formatted messages (`.code`, `.cls`, `.fn`, `.arg`)
+- Validate BEFORE any data transformation
+- Error messages preserve class information of input object
+- `call. = FALSE` for user-facing errors
+
+### Time Series Conversion
+- `ts_to_df()` in R/internals.R handles all ts/mts/zoo/xts/tsibble conversion
+- Uses `tsbox::ts_df()` then `tsbox::ts_wide()` for multi-series
+- Stores time index as `row_labels` attribute on output data.frame
+- Plot methods check `attr(x, "row_labels")` to detect time series input
+
+---
+
+## Commands
+
+```bash
+# Build package
+R CMD build .
+
+# Check package
+R CMD check --as-cran visdat_*.tar.gz
+
+# Run tests
+Rscript -e "devtools::test()"
+
+# Build documentation
+Rscript -e "devtools::document()"
+
+# Build pkgdown site
+Rscript -e "pkgdown::build_site()"
+
+# Run smoke tests
+for f in smoke/*.R; do Rscript "$f"; done
+```
+
+---
+
+## CI/CD & Automation
+
+### GitHub Workflows
+- `.github/workflows/R-CMD-check.yaml` — R CMD check across OS/R matrix (macOS, Windows, Ubuntu; release/devel/oldrel-1)
+- `.github/workflows/test-coverage.yaml` — covr::codecov coverage upload (ubuntu-latest)
+- `.github/workflows/pkgdown.yaml` — pkgdown site build/deploy via `pkgdown::deploy_to_branch()` (macOS runner)
+- `.github/workflows/pr-commands.yaml` — PR comment commands: `/document` (roxygenise), `/style` (styler)
+
+### PR Commands
+- `/document` — runs `roxygen2::roxygenise()`, commits man/* and NAMESPACE back to PR
+- `/style` — runs `styler::style_pkg()`, commits changed *.R files back to PR
+
+### pkgdown
+- Config: `_pkgdown.yml` (rotemplate, navbar, reference grouping)
+- Favicon assets: `pkgdown/favicon/`
+- Local build: `pkgdown::build_site()`
+- Deploy: `pkgdown::deploy_to_branch()`
+
+### Build Exclusions
+- `.Rbuildignore` excludes: .github, pkgdown, docs, paper, README-figs, data-raw, revdep, _pkgdown.yml
+- `.gitignore` excludes: .Rproj.user, docs, LLM/, scratch/, smoke/, *.code-workspace
+
+---
+
+## Testing Conventions
+
+### Structure
+- All tests in `tests/testthat/` (testthat edition 3)
+- File naming: `test-<feature>.R` (hyphen format preferred)
+- Mirror R/ function names: `vis-miss.R` → `test-vis-miss.R`
+- No helper/setup files currently; fixtures as package data (`R/data-*.R`)
+
+### Test Types
+- **Visual regression**: `vdiffr::expect_doppelganger()` with snapshots in `_snaps/`
+  - Always wrap with `skip_on_cran()` and `skip_on_ci()` to avoid flakiness
+  - Update snapshots: `vdiffr::manage_cases()`
+- **Text/data snapshots**: `testthat::expect_snapshot()` for tibble/text outputs
+- **Error snapshots**: `expect_snapshot(error = TRUE)` or `expect_snapshot_error()`
+- **Unit assertions**: `expect_equal()`, `expect_true()`, `expect_s3_class()`
+- **S3 dispatch**: Test with `AirPassengers` (ts) to verify method dispatch
+- **Internal functions**: Test via `visdat:::internal_fun()` in `test-visdat-internals.R`
+
+### Smoke Tests
+- Quick sanity scripts in `smoke/smoke_vis_<name>.R`
+- Run all: `for f in smoke/*.R; do Rscript "$f"; done`
+- Excluded from git (in .gitignore) — local dev use only
+
+---
+
 Code progresses through a linear three-stage maturity pipeline:
 
 1. **Analysis**: Exploratory scripts and informal functions developed for immediate insight.

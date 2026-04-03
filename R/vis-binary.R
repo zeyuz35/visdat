@@ -62,7 +62,7 @@ vis_binary.data.frame <- function(data,
     if (transpose) {
       vis_binary_plot <- vis_binary_plot + ggplot2::coord_flip()
     } else {
-      vis_binary_plot <- vis_binary_plot + ggplot2::coord_trans(y = "reverse")
+      vis_binary_plot <- vis_binary_plot + ggplot2::coord_transform(y = "reverse")
     }
     vis_binary_plot <- vis_binary_plot + 
       ggplot2::labs(x = if(transpose) "Time" else "Series", y = if(transpose) "Series" else "Time")

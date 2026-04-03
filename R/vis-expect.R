@@ -126,7 +126,7 @@ vis_expect.data.frame <- function(data, expectation, show_perc = TRUE, transpose
     if (transpose) {
       vis_expect_plot <- vis_expect_plot + ggplot2::coord_flip()
     } else {
-      vis_expect_plot <- vis_expect_plot + ggplot2::coord_trans(y = "reverse")
+      vis_expect_plot <- vis_expect_plot + ggplot2::coord_transform(y = "reverse")
     }
 
     vis_expect_plot <- vis_expect_plot + 

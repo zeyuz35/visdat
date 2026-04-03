@@ -138,7 +138,7 @@ vis_dat.data.frame <- function(x,
     if (transpose) {
       vis_dat_plot <- vis_dat_plot + ggplot2::coord_flip()
     } else {
-      vis_dat_plot <- vis_dat_plot + ggplot2::coord_trans(y = "reverse")
+      vis_dat_plot <- vis_dat_plot + ggplot2::coord_transform(y = "reverse")
     }
     
     vis_dat_plot <- vis_dat_plot + 
