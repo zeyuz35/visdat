@@ -64,12 +64,12 @@
 #' # if you have a large dataset, you might want to try downsampling:
 #' library(nycflights13)
 #' library(dplyr)
-#' flights %>%
-#'   sample_n(1000) %>%
+#' flights |>
+#'   dplyr::slice_sample(n = 1000) |>
 #'   vis_miss()
 #'
-#' flights %>%
-#'   slice(1:1000) %>%
+#' flights |>
+#'   dplyr::slice(1:1000) |>
 #'   vis_miss()
 #' }
 #'
@@ -93,13 +93,13 @@ vis_miss.data.frame <- function(
 
   if (sort_miss) {
     col_order_index <- names(n_miss_col(x, sort = TRUE))
-  } else if (!sort_miss) {
+  } else {
     col_order_index <- names(x)
   }
 
   if (!missing(facet)) {
-    vis_miss_data <- x %>%
-      dplyr::group_by({{ facet }}) %>%
+    vis_miss_data <- x |>
+      dplyr::group_by({{ facet }}) |>
       data_vis_miss(cluster)
 
     col_order_index <- update_col_order_index(
@@ -111,145 +111,99 @@ vis_miss.data.frame <- function(
     vis_miss_data <- data_vis_miss(x, cluster)
   }
 
-  # calculate the overall % missingness to display in legend -------------------
-  # make a TRUE/FALSE matrix of the data.
-  # This tells us whether it is missing (true) or not (false)
   x_fingerprinted <- fingerprint_df(x)
 
-  # optional y-axis labels for time series data
   row_labels <- attr(x, "row_labels")
 
   if (show_perc) {
     temp <- miss_guide_label(x_fingerprinted)
-
     p_miss_lab <- temp$p_miss_lab
-
     p_pres_lab <- temp$p_pres_lab
-
-    # else if show_perc FALSE
   } else {
     p_miss_lab <- "Missing"
-
     p_pres_lab <- "Present"
   }
 
-  # then we plot it
-  vis_miss_plot <- vis_create_(vis_miss_data) +
+  ret_plot <- vis_create_(vis_miss_data) +
     ggplot2::scale_fill_manual(
       name = "",
-      values = c(
-        "grey80",
-        "grey20"
-      ),
-      labels = c(
-        p_pres_lab,
-        p_miss_lab
-      )
+      values = c("grey80", "grey20"),
+      labels = c(p_pres_lab, p_miss_lab)
     ) +
     ggplot2::guides(fill = ggplot2::guide_legend(reverse = TRUE)) +
     ggplot2::theme(legend.position = "bottom") +
-    # fix up the location of the text
     ggplot2::theme(axis.text.x = ggplot2::element_text(hjust = 0, vjust = 0))
 
-  # add the missingness column labels
+  # Single-column, non-time-series: handle x-axis and return early.
+  # For time series, the time branch below handles y-axis formatting.
+  # Related issue: https://github.com/ropensci/visdat/issues/72
+  if (ncol(x) == 1 && is.null(row_labels)) {
+    ret_plot <- ret_plot +
+      ggplot2::scale_y_reverse() +
+      ggplot2::scale_x_discrete(
+        position = "top",
+        labels = if (show_perc_col) {
+          label_col_missing_pct(x_fingerprinted, col_order_index)
+        } else {
+          col_order_index
+        }
+      )
 
-  # if there is only one colummn you don't need to sort the columns
-  # this is perhaps a bit of a hacky way around, but I can't see another
-  # way around it. Related issue: https://github.com/ropensci/visdat/issues/72
-  if (ncol(x) == 1) {
-    if (show_perc_col) {
-      return(
-        vis_miss_plot <- vis_miss_plot +
-          ggplot2::scale_x_discrete(
-            position = "top",
-            labels = label_col_missing_pct(
-              x_fingerprinted,
-              col_order_index
-            )
-          )
-      )
-    } else if (!show_perc_col) {
-      return(
-        vis_miss_plot <- vis_miss_plot +
-          ggplot2::scale_x_discrete(
-            position = "top",
-            labels = col_order_index
-          )
-      )
-    }
+    return(ret_plot)
   }
 
   if (!missing(facet)) {
-    vis_miss_plot <- vis_miss_plot +
+    ret_plot <- ret_plot +
       ggplot2::facet_wrap(facets = dplyr::vars({{ facet }}))
   }
 
   if (!is.null(row_labels)) {
-    # For time series, map series to x-axis and time to y-axis.
-    vis_miss_plot$data$time <- as.Date(row_labels[vis_miss_plot$data$rows])
-    
-    # Remove geom_raster layer to prevent uneven spacing warnings, use geom_tile instead
-    vis_miss_plot$layers[[1]] <- NULL
-    
-    vis_miss_plot <- vis_miss_plot +
-      ggplot2::geom_tile(ggplot2::aes(x = variable, y = time, fill = valueType)) +
-      ggplot2::scale_y_date(expand = c(0, 0))
-      
-    if (transpose) {
-      vis_miss_plot <- vis_miss_plot + ggplot2::coord_flip()
-    } else {
-      vis_miss_plot <- vis_miss_plot + ggplot2::coord_transform(y = "reverse")
-    }
-    
-    vis_miss_plot <- vis_miss_plot + 
-      ggplot2::labs(x = NULL, y = if(transpose) "Series" else "Time")
-      
+    ret_plot <- vis_add_time_geom(ret_plot, row_labels)
+    ret_plot <- vis_add_time_coords(ret_plot, transpose)
+
     if (show_perc_col && missing(facet)) {
-      vis_miss_plot <- vis_miss_plot +
+      ret_plot <- ret_plot +
         ggplot2::scale_x_discrete(
-          position = ifelse(transpose, "bottom", "top"),
+          position = if (transpose) "bottom" else "top",
           limits = if (transpose) rev(col_order_index) else col_order_index,
-          labels = if (transpose) rev(label_col_missing_pct(x_fingerprinted, col_order_index)) else label_col_missing_pct(x_fingerprinted, col_order_index)
+          labels = if (transpose) {
+            rev(label_col_missing_pct(x_fingerprinted, col_order_index))
+          } else {
+            label_col_missing_pct(x_fingerprinted, col_order_index)
+          }
         )
     } else {
-      vis_miss_plot <- vis_miss_plot +
+      ret_plot <- ret_plot +
         ggplot2::scale_x_discrete(
-          position = ifelse(transpose, "bottom", "top"),
+          position = if (transpose) "bottom" else "top",
           limits = if (transpose) rev(col_order_index) else col_order_index
         )
     }
   } else {
-    if (transpose) {
-      vis_miss_plot <- vis_miss_plot + 
-        ggplot2::coord_flip() + 
-        ggplot2::scale_y_continuous() +
-        ggplot2::labs(x = "Observations", y = "")
-    }
-    
+    ret_plot <- vis_add_regular_coords(ret_plot, transpose)
+
     if (show_perc_col && missing(facet)) {
-      # flip the axes, add the info about limits
-      vis_miss_plot <- vis_miss_plot +
+      ret_plot <- ret_plot +
         ggplot2::scale_x_discrete(
-          position = ifelse(transpose, "bottom", "top"),
+          position = if (transpose) "bottom" else "top",
           limits = if (transpose) rev(col_order_index) else col_order_index,
-          labels = if (transpose) rev(label_col_missing_pct(x_fingerprinted, col_order_index)) else label_col_missing_pct(x_fingerprinted, col_order_index)
+          labels = if (transpose) {
+            rev(label_col_missing_pct(x_fingerprinted, col_order_index))
+          } else {
+            label_col_missing_pct(x_fingerprinted, col_order_index)
+          }
         )
     } else {
-      vis_miss_plot <- vis_miss_plot +
+      ret_plot <- ret_plot +
         ggplot2::scale_x_discrete(
-          position = ifelse(transpose, "bottom", "top"),
+          position = if (transpose) "bottom" else "top",
           limits = if (transpose) rev(col_order_index) else col_order_index
         )
     }
   }
 
-  return(vis_miss_plot)
-
-  # guides(fill = guide_legend(title = "Type"))
-  # Thanks to
-  # http://www.markhneedham.com/blog/2015/02/27/rggplot-controlling-x-axis-order/
-  # For the tip on using scale_x_discrete
-} # end of function
+  return(ret_plot)
+}
 
 
 # Time series methods: convert via tsbox to transposed data.frame, then dispatch.

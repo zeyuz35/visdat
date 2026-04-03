@@ -46,61 +46,46 @@
 vis_guess <- function(x, ...) UseMethod("vis_guess")
 
 #' @export
-vis_guess.data.frame <- function(x, palette = "default", transpose = FALSE, ...){
-
+vis_guess.data.frame <- function(
+  x,
+  palette = "default",
+  transpose = FALSE,
+  ...
+) {
   test_if_dataframe(x)
 
-# x = messy_df
-  # suppress warnings here as this is just a note about combining classes
-  d <- suppressWarnings(vis_gather_(x)) %>%
-    dplyr::mutate(valueType = guess_type(valueType)) %>%
-  # value for plotly mouseover
+  d <- suppressWarnings(vis_gather_(x)) |>
+    dplyr::mutate(valueType = guess_type(valueType)) |>
     dplyr::mutate(value = vis_extract_value_(x))
 
-  # add the boilerplate information
-  vis_plot <- vis_create_(d) +
-      ggplot2::guides(fill = ggplot2::guide_legend(title = "Type"))
-      
+  ret_plot <- vis_create_(d) +
+    ggplot2::guides(fill = ggplot2::guide_legend(title = "Type"))
+
   row_labels <- attr(x, "row_labels")
 
   if (!is.null(row_labels)) {
-    # For time series, map series to x-axis and time to y-axis.
-    vis_plot$data$time <- as.Date(row_labels[vis_plot$data$rows])
-    
-    # Remove geom_raster layer to prevent uneven spacing warnings, use geom_tile instead
-    vis_plot$layers[[1]] <- NULL
-    
-    vis_plot <- vis_plot +
-      ggplot2::geom_tile(ggplot2::aes(x = variable, y = time, fill = valueType)) +
-      ggplot2::scale_y_date(expand = c(0, 0)) +
-      ggplot2::scale_x_discrete(position = ifelse(transpose, "bottom", "top"), limits = if(transpose) rev(names(x)) else names(x)) +
+    ret_plot <- vis_add_time_geom(ret_plot, row_labels)
+    ret_plot <- ret_plot +
+      ggplot2::scale_x_discrete(
+        position = if (transpose) "bottom" else "top",
+        limits = if (transpose) rev(names(x)) else names(x)
+      ) +
       ggplot2::theme(axis.text.x = ggplot2::element_text(hjust = 0))
-      
-    if (transpose) {
-      vis_plot <- vis_plot + ggplot2::coord_flip()
-    } else {
-      vis_plot <- vis_plot + ggplot2::coord_transform(y = "reverse")
-    }
-    
-    vis_plot <- vis_plot + 
-      ggplot2::labs(x = if(transpose) "Time" else "Series", y = if(transpose) "Series" else "Time")
+    ret_plot <- vis_add_time_coords(ret_plot, transpose)
   } else {
-    vis_plot <- vis_plot +
-      ggplot2::scale_x_discrete(position = ifelse(transpose, "bottom", "top"), limits = if(transpose) rev(names(x)) else names(x)) +
+    ret_plot <- ret_plot +
+      ggplot2::scale_x_discrete(
+        position = if (transpose) "bottom" else "top",
+        limits = if (transpose) rev(names(x)) else names(x)
+      ) +
       ggplot2::theme(axis.text.x = ggplot2::element_text(hjust = 0))
-
-    if (transpose) {
-      vis_plot <- vis_plot + 
-        ggplot2::coord_flip() + 
-        ggplot2::scale_y_continuous() +
-        ggplot2::labs(x = "Observations", y = "")
-    }
+    ret_plot <- vis_add_regular_coords(ret_plot, transpose)
   }
 
-  # specify a palette ----------------------------------------------------------
-  add_vis_dat_pal(vis_plot, palette)
+  ret_plot <- add_vis_dat_pal(ret_plot, palette)
 
-} # close function
+  return(ret_plot)
+}
 
 # Time series methods: convert via tsbox to transposed data.frame, then dispatch.
 #' @export
@@ -173,26 +158,16 @@ vis_guess.default <- function(x, ...) {
 #'
 #' purrr::map_df(iris, guess_type)
 #' }
-guess_type <- function(x){
-
-  # since
-  # readr::collector_guess(NA,
-  #                        locale_ = readr::locale())
-  #
-  # returns "character", use an ifelse to identify NAs
-  #
-  # This is a fast way to check individual elements of a vector.
-  # `purrr::map` writes more function calls, slowing down things by a factor
-  # of about 3. This is faster, for the moment.
-
+guess_type <- function(x) {
   output <- character(length(x))
-  nas <- (x %>% fingerprint() %>% is.na() | is.na(x))
+  nas <- (x |> fingerprint() |> is.na() | is.na(x))
 
-  output[!nas] <- vapply(FUN = readr::guess_parser,
-                         X = x[!nas],
-                         FUN.VALUE = character(1),
-                         guess_integer = TRUE)
+  output[!nas] <- vapply(
+    FUN = readr::guess_parser,
+    X = x[!nas],
+    FUN.VALUE = character(1),
+    guess_integer = TRUE
+  )
   output[nas] <- NA
   output
-
 }

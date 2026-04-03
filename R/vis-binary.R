@@ -34,52 +34,40 @@ vis_binary.data.frame <- function(data,
 
   test_if_all_binary(data)
 
-  vis_binary_plot <- data %>%
-    vis_gather_() %>%
-    dplyr::mutate(value = vis_extract_value_(data)) %>%
+  vis_data <- data |>
+    vis_gather_() |>
+    dplyr::mutate(value = vis_extract_value_(data)) |>
     dplyr::mutate(valueType = forcats::as_factor(valueType),
                   value = forcats::as_factor(value),
-                  variable = forcats::fct_relevel(variable, order)) %>%
-    vis_create_() +
-    # change the limits etc.
+                  variable = forcats::fct_relevel(variable, order))
+
+  ret_plot <- vis_create_(vis_data) +
     ggplot2::guides(fill = ggplot2::guide_legend(title = "Value")) +
-    ggplot2::scale_fill_manual(values = c(col_zero, # zero
-                                          col_one), # one
+    ggplot2::scale_fill_manual(values = c(col_zero, col_one),
                                na.value = col_na)
 
   row_labels <- attr(data, "row_labels")
-  
-  if (!is.null(row_labels)) {
-    vis_binary_plot$data$time <- as.Date(row_labels[vis_binary_plot$data$rows])
-    vis_binary_plot$layers[[1]] <- NULL
-    
-    vis_binary_plot <- vis_binary_plot +
-      ggplot2::geom_tile(ggplot2::aes(x = variable, y = time, fill = valueType)) +
-      ggplot2::scale_y_date(expand = c(0, 0)) +
-      ggplot2::scale_x_discrete(position = ifelse(transpose, "bottom", "top"), limits = if(transpose) rev(names(data)) else names(data)) +
-      ggplot2::theme(axis.text.x = ggplot2::element_text(hjust = 0))
-      
-    if (transpose) {
-      vis_binary_plot <- vis_binary_plot + ggplot2::coord_flip()
-    } else {
-      vis_binary_plot <- vis_binary_plot + ggplot2::coord_transform(y = "reverse")
-    }
-    vis_binary_plot <- vis_binary_plot + 
-      ggplot2::labs(x = if(transpose) "Time" else "Series", y = if(transpose) "Series" else "Time")
-  } else {
-    vis_binary_plot <- vis_binary_plot +
-      ggplot2::scale_x_discrete(position = ifelse(transpose, "bottom", "top"), limits = if(transpose) rev(names(data)) else names(data)) +
-      ggplot2::theme(axis.text.x = ggplot2::element_text(hjust = 0))
 
-    if (transpose) {
-      vis_binary_plot <- vis_binary_plot + 
-        ggplot2::coord_flip() + 
-        ggplot2::scale_y_continuous() +
-        ggplot2::labs(x = "Observations", y = "")
-    }
+  if (!is.null(row_labels)) {
+    ret_plot <- vis_add_time_geom(ret_plot, row_labels)
+    ret_plot <- ret_plot +
+      ggplot2::scale_x_discrete(
+        position = if (transpose) "bottom" else "top",
+        limits = if (transpose) rev(names(data)) else names(data)
+      ) +
+      ggplot2::theme(axis.text.x = ggplot2::element_text(hjust = 0))
+    ret_plot <- vis_add_time_coords(ret_plot, transpose)
+  } else {
+    ret_plot <- ret_plot +
+      ggplot2::scale_x_discrete(
+        position = if (transpose) "bottom" else "top",
+        limits = if (transpose) rev(names(data)) else names(data)
+      ) +
+      ggplot2::theme(axis.text.x = ggplot2::element_text(hjust = 0))
+    ret_plot <- vis_add_regular_coords(ret_plot, transpose)
   }
-  
-  vis_binary_plot
+
+  return(ret_plot)
 }
 
 # Time series methods: convert via tsbox to transposed data.frame, then dispatch.

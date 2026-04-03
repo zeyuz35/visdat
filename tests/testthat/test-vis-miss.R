@@ -42,7 +42,7 @@ test_that("vis_miss correctly see missings in columns labels",{
 })
 
 test_that("vis_miss correctly aggregate missings in legend",{
-  legend_lab <- tibble::tibble(x_lab = vis_miss_list$scales$scales[[2]]$labels)
+  legend_lab <- tibble::tibble(x_lab = vis_miss_list$scales$scales[[1]]$labels)
   expect_snapshot(legend_lab)
 })
 
