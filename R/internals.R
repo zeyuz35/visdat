@@ -440,11 +440,15 @@ n_miss_col <- function(data, sort = FALSE) {
 #' @noRd
 #' @keywords internal
 ts_to_df <- function(x) {
+  stopifnot(!is.null(x))
+
   if (!tsbox::ts_boxable(x)) {
     cli::cli_abort(
       "This vis_ function requires a data.frame or supported time series object"
     )
   }
+
+  orig_attrs <- attributes(x)
 
   x_df <- tsbox::ts_df(x)
   if ("id" %in% names(x_df)) {
@@ -525,6 +529,17 @@ ts_to_df <- function(x) {
 
   # store time index as row labels for plotting x axis
   attr(series_df, "row_labels") <- time_idx
+
+  # Restore non-structural attributes lost during tsbox::ts_df conversion
+  struct_attrs <- c(
+    "dim", "dimnames", "tsp", "class", "names", "row.names",
+    "index", "indexClass", "tclass", "tzone"
+  )
+  custom_attrs <- orig_attrs[setdiff(names(orig_attrs), struct_attrs)]
+  if (length(custom_attrs) > 0) {
+    attributes(series_df) <- utils::modifyList(attributes(series_df), custom_attrs)
+  }
+
   series_df
 }
 
