@@ -13,3 +13,7 @@ LLM/
 scratch/
 smoke/
 
+
+# R Check directory
+visdat.Rcheck/
+*.tar.gz
