@@ -13,3 +13,8 @@ LLM/
 scratch/
 smoke/
 
+*.Rcheck/
+*.tar.gz
+*.log
+*pid.txt
+test_*.R
