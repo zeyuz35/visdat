@@ -33,8 +33,7 @@ Imports:
     glue,
     forcats,
     cli,
-    scales,
-    tibble
+    scales
 URL: https://docs.ropensci.org/visdat/, https://github.com/ropensci/visdat
 BugReports: https://github.com/ropensci/visdat/issues
 Suggests:

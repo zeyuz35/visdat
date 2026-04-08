@@ -73,8 +73,8 @@ vis_expect.data.frame <- function(
 
   if (show_perc) {
     temp <- expect_guide_label(data_expect)
-    p_expect_true_lab <- temp$p_expect_true_lab
-    p_expect_false_lab <- temp$p_expect_false_lab
+    p_expect_true_lab <- temp$p_expect_false_lab
+    p_expect_false_lab <- temp$p_expect_true_lab
   } else {
     p_expect_true_lab <- "TRUE"
     p_expect_false_lab <- "FALSE"

@@ -302,7 +302,7 @@ all_numeric <- function(x, ...) {
 }
 # Can I capture moving from a value to NA, or, from NA to another value?
 
-is_binary <- function(x) all(x %in% c(0L, 1L, NA), na.rm = TRUE)
+is_binary <- function(x) all(x %in% c(0L, 1L, NA))
 
 all_binary <- function(x, ...) {
   all(as.logical(lapply(x, is_binary)))
@@ -327,7 +327,7 @@ test_if_dataframe <- function(x) {
   if (!inherits(x, "data.frame")) {
     cli::cli_abort(
       c(
-        "{.emph This function} requires a {.cls data.frame}",
+        "{.code vis_dat()} requires a {.cls data.frame}",
         "the object I see has class(es): ",
         "{.cls {glue::glue_collapse(class(x), sep = ', ', last = ', and ')}}"
       )
@@ -405,7 +405,7 @@ update_col_order_index <- function(
 
 test_if_large_data <- function(x, large_data_size, warn_large_data) {
   if (ncol(x) * nrow(x) > large_data_size && warn_large_data) {
-    cli::cli_warn(
+    cli::cli_abort(
       c(
         "Data exceeds recommended size for visualisation",
         "Consider downsampling your data with {.fn dplyr::slice_sample}",
@@ -452,12 +452,11 @@ ts_to_df <- function(x) {
   }
 
   # pick a time-like index column from ts_df output
-  # Check column attributes (not values) since tsbox may return list-columns
   time_cols <- names(x_df)[vapply(
-    names(x_df),
-    function(nm) {
+    x_df,
+    function(col) {
       inherits(
-        x_df[[nm]],
+        col,
         c(
           "Date",
           "POSIXct",
@@ -465,6 +464,8 @@ ts_to_df <- function(x) {
           "yearquarter",
           "yearmonth",
           "yearweek",
+          "yearmonth",
+          "yearquarter",
           "ts"
         )
       )
@@ -546,26 +547,15 @@ ts_to_df <- function(x) {
 vis_add_time_geom <- function(
   plot,
   row_labels,
-  transpose = FALSE,
   x_aes = ggplot2::aes(x = variable, y = time, fill = valueType),
   fill_aes = NULL
 ) {
-  # Map time to y: oldest should appear at TOP, newest at BOTTOM
-  # ggplot2 normally puts larger dates at top (y_max)
-  # To reverse this, we negate the date numeric values
-  # This makes older dates (smaller numbers) become larger (at top)
-  # and newer dates (larger numbers) become smaller (at bottom)
-  plot$data$time <- -as.numeric(row_labels[plot$data$rows])
+  plot$data$time <- row_labels[plot$data$rows]
   plot$layers[[1]] <- NULL
-
-  # When transposed, swap x and y aesthetics so time goes to x
-  if (transpose) {
-    x_aes <- ggplot2::aes(x = time, y = variable, fill = valueType)
-  }
 
   ret_plot <- plot +
     ggplot2::geom_tile(x_aes) +
-    ggplot2::scale_y_continuous(expand = c(0, 0))
+    ggplot2::scale_y_date(expand = c(0, 0))
 
   return(ret_plot)
 }
@@ -583,23 +573,12 @@ vis_add_time_coords <- function(plot, transpose) {
   ret_plot <- plot
 
   if (transpose) {
-    # After aesthetic swap: x = time (continuous), y = variable (discrete)
-    # No coord_flip needed since aesthetics are already correct
     ret_plot <- ret_plot +
-      ggplot2::scale_x_continuous(
-        expand = c(0, 0),
-        breaks = scales::pretty_breaks(),
-        labels = function(x) format(as.Date(-x, origin = "1970-01-01"), "%Y")
-      ) +
+      ggplot2::coord_flip() +
       ggplot2::labs(x = "Time", y = "")
   } else {
-    # Normal case: x = variable (discrete), y = time (continuous)
     ret_plot <- ret_plot +
-      ggplot2::scale_y_continuous(
-        expand = c(0, 0),
-        breaks = scales::pretty_breaks(),
-        labels = function(x) format(as.Date(-x, origin = "1970-01-01"), "%Y")
-      ) +
+      ggplot2::coord_transform(y = "reverse") +
       ggplot2::labs(x = "", y = "Time")
   }
 
