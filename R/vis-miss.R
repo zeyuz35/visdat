@@ -158,14 +158,14 @@ vis_miss.data.frame <- function(
   }
 
   if (!is.null(row_labels)) {
-    ret_plot <- vis_add_time_geom(ret_plot, row_labels)
+    ret_plot <- vis_add_time_geom(ret_plot, row_labels, transpose = transpose)
     ret_plot <- vis_add_time_coords(ret_plot, transpose)
 
     if (show_perc_col && missing(facet)) {
       ret_plot <- ret_plot +
-        ggplot2::scale_x_discrete(
-          position = if (transpose) "bottom" else "top",
-          limits = if (transpose) rev(col_order_index) else col_order_index,
+        ggplot2::scale_y_discrete(
+          position = if (transpose) "right" else "left",
+          limits = col_order_index,
           labels = if (transpose) {
             rev(label_col_missing_pct(x_fingerprinted, col_order_index))
           } else {
@@ -174,9 +174,9 @@ vis_miss.data.frame <- function(
         )
     } else {
       ret_plot <- ret_plot +
-        ggplot2::scale_x_discrete(
-          position = if (transpose) "bottom" else "top",
-          limits = if (transpose) rev(col_order_index) else col_order_index
+        ggplot2::scale_y_discrete(
+          position = if (transpose) "right" else "left",
+          limits = col_order_index
         )
     }
   } else {

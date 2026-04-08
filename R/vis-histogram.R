@@ -14,13 +14,79 @@
 #' vis_histogram(airquality, bins = 30)
 #'
 #' @export
-vis_histogram <- function(x, ...) {
+vis_histogram <- function(x, ...) UseMethod("vis_histogram")
+
+#' @rdname vis-histogram
+#' @export
+vis_histogram.data.frame <- function(x, ...) {
   test_if_dataframe(x)
   test_if_all_numeric(x)
 
   vis_histogram_plot <- vis_histogram_create(x, ...)
 
   vis_histogram_plot
+}
+
+#' @rdname vis-histogram
+#' @export
+vis_histogram.ts <- function(x, ...) {
+  y <- ts_to_df(x)
+  vis_histogram.data.frame(y, ...)
+}
+
+#' @rdname vis-histogram
+#' @export
+vis_histogram.mts <- function(x, ...) {
+  y <- ts_to_df(x)
+  vis_histogram.data.frame(y, ...)
+}
+
+#' @rdname vis-histogram
+#' @export
+vis_histogram.zoo <- function(x, ...) {
+  y <- ts_to_df(x)
+  vis_histogram.data.frame(y, ...)
+}
+
+#' @rdname vis-histogram
+#' @export
+vis_histogram.xts <- function(x, ...) {
+  y <- ts_to_df(x)
+  vis_histogram.data.frame(y, ...)
+}
+
+#' @rdname vis-histogram
+#' @export
+vis_histogram.tbl_ts <- function(x, ...) {
+  y <- ts_to_df(x)
+  vis_histogram.data.frame(y, ...)
+}
+
+#' @rdname vis-histogram
+#' @export
+vis_histogram.tbl_df <- function(x, ...) {
+  vis_histogram.data.frame(as.data.frame(x), ...)
+}
+
+#' @rdname vis-histogram
+#' @export
+vis_histogram.tsibble <- function(x, ...) {
+  y <- ts_to_df(x)
+  vis_histogram.data.frame(y, ...)
+}
+
+#' @rdname vis-histogram
+#' @export
+vis_histogram.default <- function(x, ...) {
+  if (tsbox::ts_boxable(x)) {
+    y <- ts_to_df(x)
+    vis_histogram.data.frame(y, ...)
+  } else {
+    stop(
+      "vis_histogram requires a data.frame or supported time series object",
+      call. = FALSE
+    )
+  }
 }
 
 vis_histogram_create <- function(data, ...) {

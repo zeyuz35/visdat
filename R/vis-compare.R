@@ -156,7 +156,7 @@ vis_compare.default <- function(df1, df2, ...) {
 #'
 compare_print <- function(x){
 
-  dplyr::if_else(x == "TRUE",
+  dplyr::if_else(x == TRUE,
                  true = "same",
                  false = "different",
                  missing = "missing")
