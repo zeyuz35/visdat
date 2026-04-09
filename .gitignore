@@ -13,3 +13,5 @@ LLM/
 scratch/
 smoke/
 
+visdat.Rcheck
+*.tar.gz
