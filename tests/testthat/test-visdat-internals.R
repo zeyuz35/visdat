@@ -54,3 +54,17 @@ test_that("fingerprint can count n/a in list columns",{
   expect_equal(sum(visdat:::fingerprint(dplyr::starwars$vehicles)%>% is.na()),76)
 })
 
+
+test_that("ts_to_df preserves custom attributes for time series", {
+  skip_if_not_installed("tsbox")
+  skip_if_not_installed("zoo")
+
+  z <- zoo::zoo(1:10, as.Date("2023-01-01") + 0:9)
+  attr(z, "scale") <- "log10"
+  attr(z, "transform") <- TRUE
+
+  df <- ts_to_df(z)
+
+  expect_equal(attr(df, "scale"), "log10")
+  expect_true(attr(df, "transform"))
+})

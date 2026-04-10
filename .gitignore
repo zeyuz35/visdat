@@ -13,3 +13,8 @@ LLM/
 scratch/
 smoke/
 
+*.Rcheck/
+*.tar.gz
+pak_install.log
+pid.txt
+.jules/
