@@ -451,6 +451,9 @@ ts_to_df <- function(x) {
     x_df <- tsbox::ts_wide(x_df)
   }
 
+  # Preserve original attributes to restore custom metadata like scaling
+  original_attrs <- attributes(x)
+
   # pick a time-like index column from ts_df output
   time_cols <- names(x_df)[vapply(
     x_df,
@@ -525,6 +528,15 @@ ts_to_df <- function(x) {
 
   # store time index as row labels for plotting x axis
   attr(series_df, "row_labels") <- time_idx
+
+  # Restore non-structural attributes (e.g. scale, transform)
+  structural_attrs <- c("dim", "dimnames", "tsp", "class", "names",
+                        "row.names", "index", "indexClass", "tclass", "tzone")
+  attributes(series_df) <- utils::modifyList(
+    attributes(series_df),
+    original_attrs[setdiff(names(original_attrs), structural_attrs)]
+  )
+
   series_df
 }
 
