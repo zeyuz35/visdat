@@ -54,3 +54,50 @@ test_that("fingerprint can count n/a in list columns",{
   expect_equal(sum(visdat:::fingerprint(dplyr::starwars$vehicles)%>% is.na()),76)
 })
 
+
+test_that("ts_to_df preserves custom attributes", {
+  skip_if_not_installed("tsbox")
+  skip_if_not_installed("xts")
+  skip_if_not_installed("zoo")
+  skip_if_not_installed("tsibble")
+
+  # test ts
+  x_ts <- ts(1:10)
+  attr(x_ts, "scale") <- "log"
+  attr(x_ts, "transform") <- "diff"
+
+  df_ts <- ts_to_df(x_ts)
+  expect_equal(attr(df_ts, "scale"), "log")
+  expect_equal(attr(df_ts, "transform"), "diff")
+
+  # test xts
+  x_xts <- xts::xts(1:10, order.by = as.Date("2020-01-01") + 0:9)
+  attr(x_xts, "scale") <- "log"
+  attr(x_xts, "transform") <- "diff"
+
+  df_xts <- ts_to_df(x_xts)
+  expect_equal(attr(df_xts, "scale"), "log")
+  expect_equal(attr(df_xts, "transform"), "diff")
+
+  # test zoo
+  x_zoo <- zoo::zoo(1:10, order.by = as.Date("2020-01-01") + 0:9)
+  attr(x_zoo, "scale") <- "log"
+  attr(x_zoo, "transform") <- "diff"
+
+  df_zoo <- ts_to_df(x_zoo)
+  expect_equal(attr(df_zoo, "scale"), "log")
+  expect_equal(attr(df_zoo, "transform"), "diff")
+
+  # test tsibble
+  x_tsibble <- tsibble::tsibble(
+    date = as.Date("2020-01-01") + 0:9,
+    value = 1:10,
+    index = date
+  )
+  attr(x_tsibble, "scale") <- "log"
+  attr(x_tsibble, "transform") <- "diff"
+
+  df_tsibble <- ts_to_df(x_tsibble)
+  expect_equal(attr(df_tsibble, "scale"), "log")
+  expect_equal(attr(df_tsibble, "transform"), "diff")
+})
