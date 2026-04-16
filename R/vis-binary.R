@@ -37,9 +37,9 @@ vis_binary.data.frame <- function(data,
   vis_data <- data |>
     vis_gather_() |>
     dplyr::mutate(value = vis_extract_value_(data)) |>
-    dplyr::mutate(valueType = forcats::as_factor(valueType),
-                  value = forcats::as_factor(value),
-                  variable = forcats::fct_relevel(variable, order))
+    dplyr::mutate(valueType = factor(valueType, levels = unique(stats::na.omit(valueType))),
+                  value = factor(value, levels = unique(stats::na.omit(value))),
+                  variable = factor(variable, levels = if (is.null(order)) unique(stats::na.omit(variable)) else c(order, setdiff(unique(stats::na.omit(variable)), order))))
 
   ret_plot <- vis_create_(vis_data) +
     ggplot2::guides(fill = ggplot2::guide_legend(title = "Value")) +
