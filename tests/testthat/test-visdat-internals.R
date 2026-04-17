@@ -54,3 +54,16 @@ test_that("fingerprint can count n/a in list columns",{
   expect_equal(sum(visdat:::fingerprint(dplyr::starwars$vehicles)%>% is.na()),76)
 })
 
+
+test_that("ts_to_df handles ts and zoo objects with length > 1 names", {
+  skip_if_not_installed("tsbox")
+  skip_if_not_installed("zoo")
+
+  x_ts <- ts(1:10)
+  names(x_ts) <- letters[1:10]
+  expect_s3_class(visdat:::ts_to_df(x_ts), "data.frame")
+
+  x_zoo <- zoo::zoo(1:5, order.by = as.Date("2020-01-01") + 0:4)
+  names(x_zoo) <- letters[1:5]
+  expect_s3_class(visdat:::ts_to_df(x_zoo), "data.frame")
+})
