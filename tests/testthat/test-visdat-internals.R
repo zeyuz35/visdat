@@ -54,3 +54,18 @@ test_that("fingerprint can count n/a in list columns",{
   expect_equal(sum(visdat:::fingerprint(dplyr::starwars$vehicles)%>% is.na()),76)
 })
 
+
+test_that("ts_to_df preserves custom attributes and handles length > 1 names", {
+  skip_if_not_installed("tsbox")
+
+  # Test 1: Length > 1 names
+  x_multi_names <- ts(1:10)
+  names(x_multi_names) <- c("a", "b")
+  expect_error(ts_to_df(x_multi_names), NA)
+
+  # Test 2: Custom attributes
+  x_attr <- ts(matrix(rnorm(20), ncol=2), names=c("a", "b"))
+  attr(x_attr, "scale") <- 2
+  df_attr <- ts_to_df(x_attr)
+  expect_equal(attr(df_attr, "scale"), 2)
+})

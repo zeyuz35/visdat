@@ -518,9 +518,21 @@ ts_to_df <- function(x) {
         series_name <- measure_vars
       }
     }
-    if (!is.null(series_name) && nzchar(series_name)) {
+    if (!is.null(series_name) && length(series_name) == 1L && nzchar(series_name)) {
       names(series_df) <- series_name
     }
+  }
+
+  # Restore attributes stripped by ts_df (excluding structural ones)
+  original_attrs <- attributes(x)
+  structural_attrs <- c(
+    "dim", "dimnames", "tsp", "class", "names", "row.names", "index",
+    "indexClass", "tclass", "tzone", ".indexCLASS", ".indexTZ"
+  )
+  custom_attrs <- original_attrs[setdiff(names(original_attrs), structural_attrs)]
+
+  if (length(custom_attrs) > 0) {
+    attributes(series_df) <- utils::modifyList(attributes(series_df), custom_attrs)
   }
 
   # store time index as row labels for plotting x axis
