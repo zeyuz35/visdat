@@ -446,6 +446,8 @@ ts_to_df <- function(x) {
     )
   }
 
+  original_attrs <- attributes(x)
+
   x_df <- tsbox::ts_df(x)
   if ("id" %in% names(x_df)) {
     x_df <- tsbox::ts_wide(x_df)
@@ -518,9 +520,20 @@ ts_to_df <- function(x) {
         series_name <- measure_vars
       }
     }
-    if (!is.null(series_name) && nzchar(series_name)) {
+    if (!is.null(series_name) && length(series_name) == 1L && nzchar(series_name)) {
       names(series_df) <- series_name
     }
+  }
+
+  # Restore non-structural attributes dropped by tsbox::ts_df()
+  struct_attrs <- c(
+    "dim", "dimnames", "tsp", "class", "names", "row.names",
+    "index", "indexClass", "tclass", "tzone", ".indexCLASS",
+    ".indexTZ"
+  )
+  attrs_to_copy <- original_attrs[setdiff(names(original_attrs), struct_attrs)]
+  if (length(attrs_to_copy) > 0) {
+    attributes(series_df) <- utils::modifyList(attributes(series_df), attrs_to_copy)
   }
 
   # store time index as row labels for plotting x axis

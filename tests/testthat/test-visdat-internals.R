@@ -54,3 +54,32 @@ test_that("fingerprint can count n/a in list columns",{
   expect_equal(sum(visdat:::fingerprint(dplyr::starwars$vehicles)%>% is.na()),76)
 })
 
+
+test_that("ts_to_df preserves non-structural attributes", {
+  skip_if_not_installed("tsbox")
+  skip_if_not_installed("xts")
+  skip_if_not_installed("zoo")
+
+  # Test with ts object
+  x_ts <- ts(1:10)
+  attr(x_ts, "scale") <- 2.5
+  attr(x_ts, "transform") <- "log"
+
+  x_ts_df <- ts_to_df(x_ts)
+  expect_equal(attr(x_ts_df, "scale"), 2.5)
+  expect_equal(attr(x_ts_df, "transform"), "log")
+
+  # Test with xts object
+  x_xts <- xts::xts(1:10, order.by = Sys.Date() + 1:10)
+  attr(x_xts, "custom_meta") <- "meta_value"
+
+  x_xts_df <- ts_to_df(x_xts)
+  expect_equal(attr(x_xts_df, "custom_meta"), "meta_value")
+
+  # Test with mts object
+  x_mts <- ts(matrix(1:20, ncol = 2))
+  attr(x_mts, "mts_attr") <- TRUE
+
+  x_mts_df <- ts_to_df(x_mts)
+  expect_equal(attr(x_mts_df, "mts_attr"), TRUE)
+})
