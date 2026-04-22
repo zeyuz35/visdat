@@ -608,3 +608,29 @@ vis_add_regular_coords <- function(plot, transpose) {
 
   return(ret_plot)
 }
+#' Make a factor, retaining NA behavior similar to forcats::as_factor
+#'
+#' @param x vector
+#' @return factor
+#' @noRd
+#' @keywords internal
+vis_as_factor <- function(x) {
+  if (is.factor(x)) return(x)
+  factor(x, levels = unique(x[!is.na(x)]))
+}
+
+#' Reorder factor levels, retaining NA behavior similar to forcats::fct_relevel
+#'
+#' @param x vector
+#' @param order order to relevel
+#' @return factor
+#' @noRd
+#' @keywords internal
+vis_fct_relevel <- function(x, order = NULL) {
+  levs <- if (is.factor(x)) levels(x) else unique(x[!is.na(x)])
+  if (is.null(order)) {
+    factor(x, levels = levs)
+  } else {
+    factor(x, levels = c(order, setdiff(levs, order)))
+  }
+}
