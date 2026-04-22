@@ -13,3 +13,9 @@ LLM/
 scratch/
 smoke/
 
+visdat.Rcheck/
+*.tar.gz
+pak_install.log
+devtools_install.log
+pid.txt
+pid2.txt
