@@ -560,6 +560,23 @@ vis_add_time_geom <- function(
   return(ret_plot)
 }
 
+vis_as_factor <- function(x) {
+  if (is.factor(x)) {
+    return(x)
+  }
+  factor(x, levels = unique(x[!is.na(x)]))
+}
+
+vis_fct_relevel <- function(x, order) {
+  levs <- if (is.factor(x)) levels(x) else unique(x[!is.na(x)])
+  if (is.null(order)) {
+    new_levels <- levs
+  } else {
+    new_levels <- c(order, setdiff(levs, order))
+  }
+  factor(x, levels = new_levels)
+}
+
 #' Add coordinate transformation for time-series vis_* plots.
 #'
 #' @param plot ggplot object

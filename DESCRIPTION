@@ -31,7 +31,6 @@ Imports:
     purrr,
     readr,
     glue,
-    forcats,
     cli,
     scales
 URL: https://docs.ropensci.org/visdat/, https://github.com/ropensci/visdat
