@@ -13,3 +13,11 @@ LLM/
 scratch/
 smoke/
 
+
+visdat.Rcheck/
+
+*.tar.gz
+
+*.log
+
+pid.txt
