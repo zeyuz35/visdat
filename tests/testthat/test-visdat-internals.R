@@ -54,3 +54,27 @@ test_that("fingerprint can count n/a in list columns",{
   expect_equal(sum(visdat:::fingerprint(dplyr::starwars$vehicles)%>% is.na()),76)
 })
 
+
+test_that("ts_to_df preserves custom attributes", {
+  skip_if_not_installed("tsbox")
+  x <- ts(c(1, 2, 3))
+  attr(x, "scale") <- "log"
+  attr(x, "transform") <- "diff"
+
+  res <- ts_to_df(x)
+
+  expect_s3_class(res, "data.frame")
+  expect_equal(attr(res, "scale"), "log")
+  expect_equal(attr(res, "transform"), "diff")
+})
+
+test_that("ts_to_df handles ts with length > 1 names correctly", {
+  skip_if_not_installed("tsbox")
+  x <- ts(c(1, 2, 3))
+  names(x) <- c("obs1", "obs2", "obs3")
+
+  # Previously, this would throw "length > 1 in coercion to logical(1)"
+  expect_error(res <- ts_to_df(x), NA)
+
+  expect_s3_class(res, "data.frame")
+})
