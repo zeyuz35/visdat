@@ -608,3 +608,27 @@ vis_add_regular_coords <- function(plot, transpose) {
 
   return(ret_plot)
 }
+
+#' Convert to factor safely, preserving levels if already a factor
+#' @param x vector to convert
+#' @return factor vector
+#' @noRd
+#' @keywords internal
+vis_as_factor <- function(x) {
+  if (is.factor(x)) {
+    return(x)
+  }
+  factor(x, levels = unique(x[!is.na(x)]))
+}
+
+#' Relevel factor levels, putting `order` first
+#' @param x vector or factor
+#' @param order character vector of levels to put first
+#' @return factor vector
+#' @noRd
+#' @keywords internal
+vis_fct_relevel <- function(x, order = NULL) {
+  levs <- if (is.factor(x)) levels(x) else unique(x[!is.na(x)])
+  new_levels <- if (is.null(order)) levs else c(order, setdiff(levs, order))
+  factor(x, levels = new_levels)
+}
