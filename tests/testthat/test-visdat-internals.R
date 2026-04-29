@@ -54,3 +54,18 @@ test_that("fingerprint can count n/a in list columns",{
   expect_equal(sum(visdat:::fingerprint(dplyr::starwars$vehicles)%>% is.na()),76)
 })
 
+
+test_that("ts_to_df handles ts objects with multiple names on elements", {
+  skip_if_not_installed("tsbox")
+  x_vec <- ts(1:10, start=c(2000, 1), frequency=12)
+  # Elements have names, but it is a single series
+  names(x_vec) <- letters[1:10]
+
+  # This used to throw 'length = 10' in coercion to 'logical(1)'
+  df <- ts_to_df(x_vec)
+
+  expect_s3_class(df, "data.frame")
+  expect_true(nrow(df) == 10)
+  expect_true(ncol(df) == 1)
+  expect_equal(names(df)[1], "value")
+})
