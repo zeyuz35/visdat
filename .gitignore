@@ -13,3 +13,9 @@ LLM/
 scratch/
 smoke/
 
+visdat.Rcheck/
+*.tar.gz
+install.log
+latex.log
+install_deps.log
+pid.txt
