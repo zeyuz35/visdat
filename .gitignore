@@ -13,3 +13,7 @@ LLM/
 scratch/
 smoke/
 
+visdat.Rcheck/
+*.tar.gz
+*.log
+*.txt
