@@ -13,3 +13,15 @@ LLM/
 scratch/
 smoke/
 
+*.tar.gz
+*.Rcheck/
+install.log
+pak_install.log
+ts_install.log
+tests_install.log
+tsbox_install.log
+pid.txt
+pid_pak.txt
+pid_tests.txt
+test_script.R
+test_script2.R

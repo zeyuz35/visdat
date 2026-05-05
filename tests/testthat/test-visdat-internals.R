@@ -54,3 +54,32 @@ test_that("fingerprint can count n/a in list columns",{
   expect_equal(sum(visdat:::fingerprint(dplyr::starwars$vehicles)%>% is.na()),76)
 })
 
+
+test_that("ts_to_df preserves non-structural attributes", {
+  skip_if_not_installed("zoo")
+  skip_if_not_installed("xts")
+
+  # ts object
+  x_ts <- ts(1:10)
+  attr(x_ts, "scale") <- 2.0
+  attr(x_ts, "transform") <- "log"
+  df_ts <- visdat:::ts_to_df(x_ts)
+  expect_equal(attr(df_ts, "scale"), 2.0)
+  expect_equal(attr(df_ts, "transform"), "log")
+
+  # zoo object
+  x_zoo <- zoo::zoo(1:10, order.by = as.Date("2020-01-01") + 0:9)
+  attr(x_zoo, "scale") <- 2.0
+  attr(x_zoo, "transform") <- "log"
+  df_zoo <- visdat:::ts_to_df(x_zoo)
+  expect_equal(attr(df_zoo, "scale"), 2.0)
+  expect_equal(attr(df_zoo, "transform"), "log")
+
+  # xts object
+  x_xts <- xts::xts(1:10, order.by = as.Date("2020-01-01") + 0:9)
+  attr(x_xts, "scale") <- 2.0
+  attr(x_xts, "transform") <- "log"
+  df_xts <- visdat:::ts_to_df(x_xts)
+  expect_equal(attr(df_xts, "scale"), 2.0)
+  expect_equal(attr(df_xts, "transform"), "log")
+})
