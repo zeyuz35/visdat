@@ -20,7 +20,7 @@ Authors@R: c(
 Description: Create preliminary exploratory data visualisations of an entire 
     dataset to identify problems or unexpected features using 'ggplot2'.
 Depends:
-    R (>= 3.2.2)
+    R (>= 4.1.0)
 License: MIT + file LICENSE
 LazyData: true
 RoxygenNote: 7.3.3
