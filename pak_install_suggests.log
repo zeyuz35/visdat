@@ -1,0 +1,168 @@
+ℹ Loading metadata database
+✔ Loading metadata database ... done
+
+
+→ Will install 31 packages.
+→ Will download 25 CRAN packages (24.31 MB), cached: 6 (4.32 MB).
++ askpass       1.2.1  [bld][cmp][dl] (6.06 kB)
++ bslib         0.10.0 [bld][dl] (5.77 MB)
++ cachem        1.1.0  [bld][cmp][dl] (27.19 kB)
++ commonmark    2.0.0  [bld][cmp][dl] (147.23 kB)
++ covr          3.6.5  [bld][cmp][dl] (173.72 kB)
++ crosstalk     1.2.2  [bld][dl] (297.85 kB)
++ curl          7.1.0  [bld][cmp] + ✔ libcurl4-openssl-dev, ✔ libssl-dev
++ fontawesome   0.5.3  [bld][dl] (1.32 MB)
++ highr         0.12   [bld][dl] (13.62 kB)
++ htmlwidgets   1.6.4  [bld][dl] (868.89 kB)
++ httr          1.4.8  [bld][dl] (113.91 kB)
++ hunspell      3.0.6  [bld][cmp][dl] (3.21 MB)
++ jquerylib     0.1.4  [bld][dl] (520.21 kB)
++ knitr         1.51   [bld][dl] (483.74 kB) + ✖ pandoc
++ later         1.4.8  [bld][cmp][dl] (70.25 kB)
++ lazyeval      0.2.3  [bld][cmp]
++ memoise       2.0.1  [bld][dl] (17.85 kB)
++ mime          0.13   [bld][cmp][dl] (21.95 kB)
++ openssl       2.4.0  [bld][cmp] + ✔ libssl-dev
++ otel          0.2.0  [bld][dl] (72.58 kB)
++ plotly        4.12.0 [bld][dl] (4.61 MB)
++ promises      1.5.0  [bld][dl] (3.21 MB)
++ rappdirs      0.3.4  [bld][cmp][dl] (11.76 kB)
++ rex           1.2.2  [bld]
++ rmarkdown     2.31   [bld] + ✖ pandoc
++ sass          0.4.10 [bld][cmp][dl] (3.03 MB) + ✔ make
++ spelling      2.3.2  [bld][dl] (11.80 kB)
++ sys           3.4.3  [bld][cmp][dl] (19.94 kB)
++ tinytex       0.59   [bld]
++ xfun          0.57   [bld][cmp][dl] (172.72 kB)
++ yaml          2.3.12 [bld][cmp][dl] (108.97 kB)
+→ Will install 1 system package:
++ pandoc  - knitr, rmarkdown
+ℹ Getting 25 pkgs (24.31 MB), 6 (4.32 MB) cached
+✔ Got highr 0.12 (source) (13.62 kB)
+✔ Got xfun 0.57 (source) (172.72 kB)
+✔ Got knitr 1.51 (source) (483.74 kB)
+✔ Got memoise 2.0.1 (source) (17.85 kB)
+✔ Got spelling 2.3.2 (source) (11.80 kB)
+✔ Got fontawesome 0.5.3 (source) (1.32 MB)
+✔ Got sass 0.4.10 (source) (3.03 MB)
+✔ Got rex 1.2.2 (source) (91.29 kB)
+✔ Got lazyeval 0.2.3 (source) (130.12 kB)
+✔ Got crosstalk 1.2.2 (source) (297.85 kB)
+✔ Got openssl 2.4.0 (source) (1.18 MB)
+✔ Got promises 1.5.0 (source) (3.21 MB)
+✔ Got curl 7.1.0 (source) (717.73 kB)
+✔ Got hunspell 3.0.6 (source) (3.21 MB)
+✔ Got rappdirs 0.3.4 (source) (11.76 kB)
+✔ Got rmarkdown 2.31 (source) (2.20 MB)
+✔ Got later 1.4.8 (source) (70.25 kB)
+✔ Got tinytex 0.59 (source) (37.50 kB)
+✔ Got htmlwidgets 1.6.4 (source) (868.89 kB)
+✔ Got askpass 1.2.1 (source) (6.06 kB)
+✔ Got plotly 4.12.0 (source) (4.61 MB)
+✔ Got httr 1.4.8 (source) (113.91 kB)
+✔ Got mime 0.13 (source) (21.95 kB)
+✔ Got commonmark 2.0.0 (source) (147.23 kB)
+✔ Got bslib 0.10.0 (source) (5.77 MB)
+✔ Got sys 3.4.3 (source) (19.94 kB)
+✔ Got otel 0.2.0 (source) (72.58 kB)
+✔ Got covr 3.6.5 (source) (173.72 kB)
+✔ Got yaml 2.3.12 (source) (108.97 kB)
+✔ Got cachem 1.1.0 (source) (27.19 kB)
+✔ Got jquerylib 0.1.4 (source) (520.21 kB)
+ℹ Installing system requirements
+ℹ Executing `sh -c apt-get -y update`
+ℹ Executing `sh -c apt-get -y install pandoc`
+ℹ Building xfun 0.57
+ℹ Building yaml 2.3.12
+ℹ Building cachem 1.1.0
+ℹ Building fontawesome 0.5.3
+✔ Built cachem 1.1.0 (2s)
+ℹ Building jquerylib 0.1.4
+✔ Built fontawesome 0.5.3 (2.3s)
+ℹ Building mime 0.13
+✔ Built jquerylib 0.1.4 (1.9s)
+ℹ Building rappdirs 0.3.4
+✔ Built mime 0.13 (1.6s)
+ℹ Building commonmark 2.0.0
+✔ Built xfun 0.57 (5.4s)
+ℹ Building hunspell 3.0.6
+✔ Built rappdirs 0.3.4 (1.5s)
+ℹ Building curl 7.1.0
+✔ Built yaml 2.3.12 (7.5s)
+ℹ Building rex 1.2.2
+✔ Built rex 1.2.2 (2.4s)
+ℹ Building sys 3.4.3
+✔ Built sys 3.4.3 (1.7s)
+ℹ Building later 1.4.8
+✔ Built curl 7.1.0 (6.6s)
+ℹ Building lazyeval 0.2.3
+✔ Built lazyeval 0.2.3 (4.3s)
+ℹ Building otel 0.2.0
+✔ Built commonmark 2.0.0 (15.2s)
+✔ Installed xfun 0.57  (51ms)
+ℹ Building highr 0.12
+✔ Built otel 0.2.0 (2.8s)
+ℹ Building tinytex 0.59
+✔ Built highr 0.12 (1.3s)
+✔ Installed highr 0.12  (32ms)
+✔ Installed yaml 2.3.12  (61ms)
+ℹ Building knitr 1.51
+✔ Built tinytex 0.59 (2.1s)
+✔ Installed cachem 1.1.0  (38ms)
+ℹ Building memoise 2.0.1
+✔ Built memoise 2.0.1 (1.8s)
+✔ Installed fontawesome 0.5.3  (56ms)
+✔ Installed jquerylib 0.1.4  (49ms)
+✔ Installed memoise 2.0.1  (30ms)
+✔ Installed mime 0.13  (80ms)
+✔ Installed rappdirs 0.3.4  (31ms)
+ℹ Building sass 0.4.10
+✔ Built knitr 1.51 (7.8s)
+✔ Installed knitr 1.51  (68ms)
+✔ Installed tinytex 0.59  (32ms)
+✔ Installed commonmark 2.0.0  (42ms)
+✔ Installed curl 7.1.0  (92ms)
+✔ Installed rex 1.2.2  (1s)
+✔ Installed sys 3.4.3  (29ms)
+ℹ Building askpass 1.2.1
+✔ Built askpass 1.2.1 (1.4s)
+✔ Installed askpass 1.2.1  (33ms)
+ℹ Building openssl 2.4.0
+✔ Built later 1.4.8 (28.2s)
+✔ Installed later 1.4.8  (74ms)
+✔ Installed lazyeval 0.2.3  (41ms)
+ℹ Building crosstalk 1.2.2
+✔ Built openssl 2.4.0 (9.2s)
+✔ Installed openssl 2.4.0  (73ms)
+ℹ Building httr 1.4.8
+✔ Built crosstalk 1.2.2 (3.1s)
+✔ Installed crosstalk 1.2.2  (42ms)
+✔ Installed otel 0.2.0  (35ms)
+ℹ Building promises 1.5.0
+✔ Built httr 1.4.8 (5s)
+✔ Installed httr 1.4.8  (38ms)
+ℹ Building covr 3.6.5
+✔ Built promises 1.5.0 (5.3s)
+✔ Installed promises 1.5.0  (66ms)
+✔ Built covr 3.6.5 (3.6s)
+✔ Installed covr 3.6.5  (39ms)
+✔ Built hunspell 3.0.6 (47.7s)
+✔ Installed hunspell 3.0.6  (133ms)
+ℹ Building spelling 2.3.2
+✔ Built spelling 2.3.2 (1.5s)
+✔ Installed spelling 2.3.2  (36ms)
+✔ Built sass 0.4.10 (2m 30.2s)
+✔ Installed sass 0.4.10  (107ms)
+ℹ Building bslib 0.10.0
+✔ Built bslib 0.10.0 (9.9s)
+✔ Installed bslib 0.10.0  (152ms)
+ℹ Building rmarkdown 2.31
+✔ Built rmarkdown 2.31 (9.1s)
+✔ Installed rmarkdown 2.31  (107ms)
+ℹ Building htmlwidgets 1.6.4
+✔ Built htmlwidgets 1.6.4 (2.7s)
+✔ Installed htmlwidgets 1.6.4  (49ms)
+ℹ Building plotly 4.12.0
+✔ Built plotly 4.12.0 (12.4s)
+✔ Installed plotly 4.12.0  (106ms)
+✔ 5 pkgs + 64 deps: kept 38, added 31, dld 31 (28.67 MB) [3m 47.5s]

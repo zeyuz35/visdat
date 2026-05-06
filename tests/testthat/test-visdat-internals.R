@@ -54,3 +54,18 @@ test_that("fingerprint can count n/a in list columns",{
   expect_equal(sum(visdat:::fingerprint(dplyr::starwars$vehicles)%>% is.na()),76)
 })
 
+
+test_that("ts_to_df preserves custom attributes for time series objects", {
+  skip_if_not_installed("tsbox")
+  skip_if_not_installed("xts")
+
+  dates <- seq(as.Date("2020-01-01"), length.out = 10, by = "days")
+  my_xts <- xts::xts(1:10, order.by = dates)
+  attr(my_xts, "scale") <- "log"
+  attr(my_xts, "transform") <- "diff"
+
+  df_xts <- ts_to_df(my_xts)
+
+  expect_equal(attr(df_xts, "scale"), "log")
+  expect_equal(attr(df_xts, "transform"), "diff")
+})
