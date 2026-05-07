@@ -54,3 +54,45 @@ test_that("fingerprint can count n/a in list columns",{
   expect_equal(sum(visdat:::fingerprint(dplyr::starwars$vehicles)%>% is.na()),76)
 })
 
+
+test_that("ts_to_df preserves custom attributes while avoiding structural conflicts", {
+  skip_if_not_installed("tsbox")
+
+  # test with ts
+  x_ts <- ts(1:10, start = 2000, frequency = 1)
+  attr(x_ts, "scale") <- "log"
+  attr(x_ts, "custom_meta") <- 123
+
+  df_ts <- ts_to_df(x_ts)
+
+  expect_equal(attr(df_ts, "scale"), "log")
+  expect_equal(attr(df_ts, "custom_meta"), 123)
+  expect_s3_class(df_ts, "data.frame")
+  expect_false("tsp" %in% names(attributes(df_ts)))
+
+  # test with zoo
+  skip_if_not_installed("zoo")
+  x_zoo <- zoo::zoo(1:10, order.by = seq(as.Date("2000-01-01"), by = "days", length.out = 10))
+  attr(x_zoo, "scale") <- "log"
+  attr(x_zoo, "custom_meta") <- 123
+
+  df_zoo <- ts_to_df(x_zoo)
+
+  expect_equal(attr(df_zoo, "scale"), "log")
+  expect_equal(attr(df_zoo, "custom_meta"), 123)
+  expect_s3_class(df_zoo, "data.frame")
+  expect_false("index" %in% names(attributes(df_zoo)))
+
+  # test with xts
+  skip_if_not_installed("xts")
+  x_xts <- xts::xts(1:10, order.by = seq(as.Date("2000-01-01"), by = "days", length.out = 10))
+  attr(x_xts, "scale") <- "log"
+  attr(x_xts, "custom_meta") <- 123
+
+  df_xts <- ts_to_df(x_xts)
+
+  expect_equal(attr(df_xts, "scale"), "log")
+  expect_equal(attr(df_xts, "custom_meta"), 123)
+  expect_s3_class(df_xts, "data.frame")
+  expect_false("indexClass" %in% names(attributes(df_xts)))
+})
