@@ -11,24 +11,15 @@
 #' @noRd
 #'
 fingerprint <- function(x) {
-  # is the data missing?
+  class_str <- glue::glue_collapse(class(x), sep = "\n")
+  res <- rep.int(class_str, length(x))
   if (!is.list(x)) {
-    ifelse(
-      is.na(x),
-      # yes? Leave as is NA
-      yes = NA,
-      # no? make that value no equal to the class of this cell.
-      no = glue::glue_collapse(class(x), sep = "\n")
-    )
+    res[is.na(x)] <- NA_character_
   } else {
-    ifelse(
-      purrr::map_lgl(x, ~ length(.x) == 0),
-      # yes? Leave as is NA
-      yes = NA,
-      # no? make that value no equal to the class of this cell.
-      no = glue::glue_collapse(class(x), sep = "\n")
-    )
+    empty_list <- lengths(x) == 0L
+    res[empty_list] <- NA_character_
   }
+  res
 } # end function
 
 #' Run fingerprint on a dataframe
