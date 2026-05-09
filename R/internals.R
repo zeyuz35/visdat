@@ -446,6 +446,8 @@ ts_to_df <- function(x) {
     )
   }
 
+  orig_attrs <- attributes(x)
+
   x_df <- tsbox::ts_df(x)
   if ("id" %in% names(x_df)) {
     x_df <- tsbox::ts_wide(x_df)
@@ -518,13 +520,21 @@ ts_to_df <- function(x) {
         series_name <- measure_vars
       }
     }
-    if (!is.null(series_name) && nzchar(series_name)) {
+    if (!is.null(series_name) && length(series_name) == 1L && nzchar(series_name)) {
       names(series_df) <- series_name
     }
   }
 
   # store time index as row labels for plotting x axis
   attr(series_df, "row_labels") <- time_idx
+
+  # restore custom attributes, filtering out structural ones
+  exclude_attrs <- c("dim", "dimnames", "tsp", "class", "names", "row.names", "index", "indexClass", "tclass", "tzone", ".indexCLASS", ".indexTZ")
+  custom_attrs <- orig_attrs[setdiff(names(orig_attrs), exclude_attrs)]
+  if (length(custom_attrs) > 0) {
+    attributes(series_df) <- c(attributes(series_df), custom_attrs)
+  }
+
   series_df
 }
 
