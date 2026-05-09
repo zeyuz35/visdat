@@ -1,0 +1,3 @@
+## 2024-05-10 - Modernize `any(purrr::map_lgl(...))`
+**Learning:** `purrr::map_lgl()` involves significant overhead and relies on an external dependency. Base R's `vapply(..., logical(1))` or `lengths() == 0L` is much faster and idiomatic for element-wise checks in lists/dataframes. For list length checks, `lengths(x) == 0L` is the highly optimized native alternative to `purrr::map_lgl(x, ~ length(.x) == 0)`.
+**Action:** Replace `any(purrr::map_lgl(data, is.list))` with `any(vapply(data, is.list, logical(1)))` and `purrr::map_lgl(x, ~ length(.x) == 0)` with `lengths(x) == 0L` in `R/internals.R` to improve performance and remove unnecessary `purrr` dependencies in internal utilities.

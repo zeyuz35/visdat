@@ -22,7 +22,7 @@ fingerprint <- function(x) {
     )
   } else {
     ifelse(
-      purrr::map_lgl(x, ~ length(.x) == 0),
+      lengths(x) == 0L,
       # yes? Leave as is NA
       yes = NA,
       # no? make that value no equal to the class of this cell.
@@ -419,7 +419,7 @@ fast_n_miss_col <- function(x) colSums(is.na(x))
 
 n_miss_col <- function(data, sort = FALSE) {
   # if no list columns
-  any_list <- any(purrr::map_lgl(data, is.list))
+  any_list <- any(vapply(data, is.list, logical(1)))
   if (!any_list) {
     n_missing_cols <- fast_n_miss_col(data)
   } else if (any_list) {
