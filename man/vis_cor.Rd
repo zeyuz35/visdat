@@ -21,7 +21,7 @@ values present. This can be "everything", "all.obs", "complete.obs",
 "na.or.complete", or "pairwise.complete.obs" (default). This option is
 taken from the \code{cor} function argument \code{use}.,}
 
-\item{facet}{bare unqouted variable to use for facetting}
+\item{facet}{bare unquoted variable to use for facetting}
 }
 \value{
 ggplot2 object
