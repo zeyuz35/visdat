@@ -20,3 +20,8 @@
 ^CODE_OF_CONDUCT\.md$
 ^codecov\.yml$
 ^CRAN-SUBMISSION$
+^\\.jules$
+^visdat\.Rcheck$
+^test_fingerprint.*\.R$
+^test_n_miss_col\.R$
+^install_.*\.R$

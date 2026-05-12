@@ -13,3 +13,10 @@ LLM/
 scratch/
 smoke/
 
+visdat.Rcheck/
+*.tar.gz
+install_*.R
+test_fingerprint*.R
+test_n_miss_col.R
+visdat.Rcheck/
+visdat_*.tar.gz
