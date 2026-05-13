@@ -1,0 +1,3 @@
+## 2026-05-13 - Optimize purrr usage and ifelse conditionals
+**Learning:** In the `visdat` package codebase, `ifelse()` and formula-based `purrr::map_lgl` functions (like `purrr::map_lgl(x, ~ length(.x) == 0)`) inside hot inner functions (like `fingerprint`) severely impact performance due to R's evaluation overhead.
+**Action:** Replace `ifelse()` with vectorized assignments over pre-allocated outputs (e.g., `res[is.na(x)] <- NA`). Replace `purrr::map_lgl` checks with native `vapply` (e.g., `vapply(data, is.list, logical(1))`) and `lengths()` (e.g., `lengths(x) == 0L`) to improve execution speed by orders of magnitude and remove `purrr` evaluation overhead from internal utility functions.
