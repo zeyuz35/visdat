@@ -22,7 +22,7 @@ fingerprint <- function(x) {
     )
   } else {
     ifelse(
-      purrr::map_lgl(x, ~ length(.x) == 0),
+      lengths(x) == 0L,
       # yes? Leave as is NA
       yes = NA,
       # no? make that value no equal to the class of this cell.
