@@ -54,10 +54,10 @@ package, specifically, \code{naniar::miss_var_summary()}.
 }
 \note{
 Some datasets might be too large to plot, sometimes creating a blank
-plot - if this happens, I would recommend downsampling the data, either
-looking at the first 1,000 rows or by taking a random sample. This means
-that you won't get the same "look" at the data, but it is better than
-a blank plot! See example code for suggestions on doing this.
+plot - if this happens, it is recommended to downsample the data, either
+by looking at the first 1,000 rows or by taking a random sample. This means
+that the resulting plot will not reflect the full dataset, but it is
+preferable to a blank plot. See example code for suggestions on doing this.
 }
 \examples{
 
