@@ -11,24 +11,17 @@
 #' @noRd
 #'
 fingerprint <- function(x) {
-  # is the data missing?
+  class_str <- glue::glue_collapse(class(x), sep = "\n")
+  res <- rep(class_str, length(x))
+
+  # Optimization: Use vectorized subset assignment instead of ifelse()
+  # and native lengths() instead of purrr::map_lgl() for massive performance gains.
   if (!is.list(x)) {
-    ifelse(
-      is.na(x),
-      # yes? Leave as is NA
-      yes = NA,
-      # no? make that value no equal to the class of this cell.
-      no = glue::glue_collapse(class(x), sep = "\n")
-    )
+    res[is.na(x)] <- NA
   } else {
-    ifelse(
-      purrr::map_lgl(x, ~ length(.x) == 0),
-      # yes? Leave as is NA
-      yes = NA,
-      # no? make that value no equal to the class of this cell.
-      no = glue::glue_collapse(class(x), sep = "\n")
-    )
+    res[lengths(x) == 0L] <- NA
   }
+  res
 } # end function
 
 #' Run fingerprint on a dataframe
@@ -418,8 +411,10 @@ test_if_large_data <- function(x, large_data_size, warn_large_data) {
 fast_n_miss_col <- function(x) colSums(is.na(x))
 
 n_miss_col <- function(data, sort = FALSE) {
+  # Optimization: Replace purrr::map_lgl with base R's vapply for better performance
+  # and to reduce external dependencies in internal utility functions.
   # if no list columns
-  any_list <- any(purrr::map_lgl(data, is.list))
+  any_list <- any(vapply(data, is.list, logical(1)))
   if (!any_list) {
     n_missing_cols <- fast_n_miss_col(data)
   } else if (any_list) {

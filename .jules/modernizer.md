@@ -1,0 +1,3 @@
+## 2024-05-15 - Replace purrr with base R functions
+**Learning:** `purrr::map_lgl` with an anonymous function is significantly slower and adds an unnecessary dependency compared to highly optimized base R alternatives like `lengths()` and `vapply()`. Vectorized subset assignment (e.g., `res[is.na(x)] <- NA`) is also massively faster than element-wise `ifelse()`.
+**Action:** Always prefer native R functions (`lengths(x) == 0L` instead of `purrr::map_lgl(x, ~ length(.x) == 0)`) and vectorized operations (`vapply`) for list length checks and type checks to improve performance and reduce external dependencies.
