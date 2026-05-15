@@ -61,7 +61,7 @@ data_vis_cor.data.frame <- function(x,
       names_to = "key",
       values_to = "value"
     ) |>
-    purrr::set_names(c("row_1", "row_2", "value"))
+    stats::setNames(c("row_1", "row_2", "value"))
 
 }
 

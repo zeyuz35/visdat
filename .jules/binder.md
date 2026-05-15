@@ -1,0 +1,3 @@
+## 2024-06-25 - Replace mapping dependencies with fast base R
+**Learning:** `purrr::map_lgl(x, ~ length(.x) == 0)` and `purrr::map_lgl(data, is.list)` introduce external dependency and functional overhead that is redundant for simple R evaluation. Similarly, `purrr::set_names` can be replaced with `stats::setNames` inside the native pipe (`|>`), avoiding the need to import `purrr` for common data manipulation pipelines.
+**Action:** Always consider `lengths(x) == 0L` instead of `map_lgl` for length checking, `vapply(data, func, logical(1))` instead of `map_lgl` for type checking, and `stats::setNames` instead of `purrr::set_names` for naming objects when refactoring R code to eliminate dependencies and improve execution speed.
