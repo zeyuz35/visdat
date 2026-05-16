@@ -1,0 +1,3 @@
+## 2024-05-17 - Replacing purrr::map_lgl with base R functions
+**Learning:** For testing if items are lists, `vapply(data, is.list, logical(1))` is a fast, dependency-free alternative to `purrr::map_lgl(data, is.list)`. For checking lengths of list elements, `lengths(x) == 0L` vectorizes in base R and performs faster than `purrr::map_lgl(x, ~ length(.x) == 0)`.
+**Action:** Replace `purrr::map_lgl` and other basic mapping/iterators with built-in base R functions (`lengths`, `vapply`, `lapply`) in hot paths or internal files like `internals.R` when there is no complex parsing or error-handling needed, thereby reducing the `purrr` dependency footprint and avoiding unnecessary performance overhead.
