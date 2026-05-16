@@ -1,0 +1,3 @@
+## 2024-05-16 - R Performance Optimization: ifelse()
+**Learning:** `ifelse()` in R evaluates conditionally but element-wise and has significant overhead. A pre-allocated result vector combined with vectorized subset assignment (e.g., `res[is.na(x)] <- NA` or `res[lengths(x) == 0L] <- NA`) is ~10x faster for standard vectors and >2x faster for lists, while maintaining identical output types. Also, for list length checking, `lengths(x) == 0L` is much faster than `purrr::map_lgl(x, ~ length(.x) == 0)`.
+**Action:** Replace `ifelse()` calls used for simple conditional replacement across vectors/lists with vectorized logical subsetting. Replace list mapping for lengths with native `lengths()`.
