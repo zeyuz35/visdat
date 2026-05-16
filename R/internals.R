@@ -506,10 +506,13 @@ ts_to_df <- function(x) {
     series_name <- NULL
     if (inherits(x, "ts") && !inherits(x, "mts")) {
       series_name <- names(x)
+      if (length(series_name) > 1L) series_name <- NULL
     } else if (inherits(x, "zoo")) {
       series_name <- names(x)
+      if (length(series_name) > 1L) series_name <- NULL
     } else if (inherits(x, "xts")) {
       series_name <- colnames(x)
+      if (length(series_name) > 1L) series_name <- NULL
     } else if (inherits(x, "tbl_ts")) {
       # For tsibble, find the measure variable (not the index)
       idx_var <- tsibble::index_var(x)
@@ -518,7 +521,7 @@ ts_to_df <- function(x) {
         series_name <- measure_vars
       }
     }
-    if (!is.null(series_name) && nzchar(series_name)) {
+    if (!is.null(series_name) && length(series_name) == 1L && !is.na(series_name) && nzchar(series_name)) {
       names(series_df) <- series_name
     }
   }
