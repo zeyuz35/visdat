@@ -54,3 +54,10 @@ test_that("fingerprint can count n/a in list columns",{
   expect_equal(sum(visdat:::fingerprint(dplyr::starwars$vehicles)%>% is.na()),76)
 })
 
+
+test_that("ts_to_df handles time-series objects with multiple names", {
+  x <- ts(rnorm(10))
+  names(x) <- c("A", "B")
+  expect_silent(res <- ts_to_df(x))
+  expect_true(inherits(res, "data.frame"))
+})
