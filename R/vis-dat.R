@@ -35,11 +35,11 @@
 #' @seealso  [vis_miss()] [vis_guess()] [vis_expect()] [vis_cor()]
 #'   [vis_compare()]
 #'
-#' @note Some datasets might be too large to plot, sometimes creating a blank
-#'   plot - if this happens, I would recommend downsampling the data, either
-#'   looking at the first 1,000 rows or by taking a random sample. This means
-#'   that you won't get the same "look" at the data, but it is better than
-#'   a blank plot! See example code for suggestions on doing this.
+#' @note Some datasets might be too large to plot, occasionally resulting in a blank
+#'   plot. If this occurs, downsampling the data is recommended, such as selecting
+#'   the first 1,000 rows or taking a random sample. While this alters the visual
+#'   representation of the data, it is preferable to a blank plot. See example code
+#'   for suggestions on doing this.
 #'
 #' @examples
 #'
