@@ -29,7 +29,7 @@ abbreviate_vars <- function(data, min_length = 10){
     .fn = ~abbreviate(.x,
                       minlength = min_length,
                       method = "both"),
-    # this didn't work with ncar_over for some reason?
+    # Issue observed with ncar_over.
     .cols = dplyr::everything()
   )
 }

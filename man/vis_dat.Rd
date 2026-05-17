@@ -43,10 +43,10 @@ easy to customize and change labels, and customize the plot
 }
 \note{
 Some datasets might be too large to plot, sometimes creating a blank
-plot - if this happens, I would recommend downsampling the data, either
+plot - if this happens, downsampling the data is recommended, either by
 looking at the first 1,000 rows or by taking a random sample. This means
-that you won't get the same "look" at the data, but it is better than
-a blank plot! See example code for suggestions on doing this.
+that the overall visualization will not represent the entire dataset, but it is better than
+a blank plot. See example code for suggestions on doing this.
 }
 \examples{
 
