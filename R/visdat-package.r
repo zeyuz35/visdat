@@ -6,7 +6,7 @@
 #'
 #' @seealso
 #'
-#' It's main functions are:
+#' Its main functions are:
 #' \itemize{
 #'   \item [vis_dat()]
 #'   \item [vis_miss()]

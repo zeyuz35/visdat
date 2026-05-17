@@ -11,7 +11,7 @@ visdat makes it easy to visualise your whole dataset so that you can
 visually identify problems.
 }
 \seealso{
-It's main functions are:
+Its main functions are:
 \itemize{
 \item \code{\link[=vis_dat]{vis_dat()}}
 \item \code{\link[=vis_miss]{vis_miss()}}
@@ -24,6 +24,11 @@ Learn more about visdat at \url{https://docs.ropensci.org/visdat/}
 }
 \author{
 \strong{Maintainer}: Nicholas Tierney \email{nicholas.tierney@gmail.com} (\href{https://orcid.org/0000-0003-1460-8722}{ORCID})
+
+Authors:
+\itemize{
+  \item Nicholas Tierney \email{nicholas.tierney@gmail.com} (\href{https://orcid.org/0000-0003-1460-8722}{ORCID})
+}
 
 Other contributors:
 \itemize{
