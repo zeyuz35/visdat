@@ -81,9 +81,9 @@ vis_dat.data.frame <- function(
 
   if (sort_type) {
     type_sort <- order(
-      purrr::map_chr(.x = x, .f = function(x) {
+      vapply(x, function(x) {
         glue::glue_collapse(class(x), sep = "\n")
-      })
+      }, character(1))
     )
     col_order_index <- names(x)[type_sort]
   } else {

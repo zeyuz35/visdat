@@ -22,7 +22,7 @@ fingerprint <- function(x) {
     )
   } else {
     ifelse(
-      purrr::map_lgl(x, ~ length(.x) == 0),
+      lengths(x) == 0L,
       # yes? Leave as is NA
       yes = NA,
       # no? make that value no equal to the class of this cell.
@@ -226,15 +226,15 @@ add_vis_dat_pal <- function(vis_plot, palette) {
 label_col_missing_pct <- function(x, col_order_index) {
   # present everything in the right order
 
-  labelled_pcts <- colMeans(is.na(x))[col_order_index] |>
-    purrr::map_chr(function(x) {
-      dplyr::case_when(
-        x == 0 ~ "0%",
-        x < 0.001 ~ "<0.1%",
-        x < 0.01 ~ "<1%",
-        x >= 0.01 ~ scales::percent(x, accuracy = 1),
-      )
-    })
+  pcts <- colMeans(is.na(x))[col_order_index]
+  labelled_pcts <- vapply(pcts, function(x) {
+    dplyr::case_when(
+      x == 0 ~ "0%",
+      x < 0.001 ~ "<0.1%",
+      x < 0.01 ~ "<1%",
+      x >= 0.01 ~ scales::percent(x, accuracy = 1),
+    )
+  }, character(1))
 
   glue::glue("{col_order_index} ({labelled_pcts})")
 }
@@ -419,7 +419,7 @@ fast_n_miss_col <- function(x) colSums(is.na(x))
 
 n_miss_col <- function(data, sort = FALSE) {
   # if no list columns
-  any_list <- any(purrr::map_lgl(data, is.list))
+  any_list <- any(vapply(data, is.list, logical(1)))
   if (!any_list) {
     n_missing_cols <- fast_n_miss_col(data)
   } else if (any_list) {
