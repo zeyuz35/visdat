@@ -1,0 +1,3 @@
+## 2024-05-18 - Avoid `ifelse` for element-wise conditional assignment
+**Learning:** In R, `ifelse()` introduces significant evaluation overhead compared to vectorized subset assignment. Additionally, for list-columns, using `purrr::map_lgl(x, ~ length(.x) == 0)` is orders of magnitude slower than using base R's highly optimized, internal C-level `lengths()` function.
+**Action:** When performing element-wise substitution in data manipulation tasks, pre-allocate the result vector and use vectorized index replacement (e.g., `res[is.na(x)] <- NA`) instead of `ifelse()`. For lists, prefer base R `lengths(x) == 0L` over `map_lgl`.
