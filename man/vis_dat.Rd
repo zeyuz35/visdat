@@ -42,11 +42,11 @@ the values are missing. As \code{vis_dat} returns a ggplot object, it is very
 easy to customize and change labels, and customize the plot
 }
 \note{
-Some datasets might be too large to plot, sometimes creating a blank
-plot - if this happens, I would recommend downsampling the data, either
-looking at the first 1,000 rows or by taking a random sample. This means
-that you won't get the same "look" at the data, but it is better than
-a blank plot! See example code for suggestions on doing this.
+Large datasets may result in a blank plot. In these cases, it is
+recommended to downsample the data (e.g., by selecting the first 1,000
+rows or taking a random sample) before plotting. While this alters the
+exact visualization, it prevents plot failure. See example code for
+downsampling techniques.
 }
 \examples{
 
