@@ -1,0 +1,3 @@
+## 2024-05-19 - Modernizing fingerprint and list checks
+**Learning:** `purrr::map_lgl` and `ifelse` inside element-wise functions like `fingerprint` cause significant performance bottlenecks in base dataframes operations. `ifelse` also evaluates both branches, and list lengths check via map is slower than base R's `lengths(x) == 0L`. `any(purrr::map_lgl(data, is.list))` can be replaced with native `vapply(data, is.list, logical(1))` or `any(vapply(data, is.list, logical(1)))` for performance and removing purrr.
+**Action:** Replace `ifelse` and `purrr::map_lgl(x, ~ length(.x) == 0)` with pre-allocated vector assignment and base R `lengths(x) == 0L`. Replace `purrr::map_lgl(data, is.list)` with `vapply(data, is.list, logical(1))` in base logic like `n_miss_col`.
