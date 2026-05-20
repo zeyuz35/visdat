@@ -1,0 +1,3 @@
+## 2025-05-16 - Vectorize `fingerprint` internal function
+**Learning:** Element-wise mapping via `purrr::map_lgl()` inside internal helper functions that are applied across large datasets (like `vis_dat` does with `fingerprint`) can create a major performance bottleneck compared to vectorized base R functions. `ifelse()` for element-wise conditional replacement also adds significant evaluation overhead.
+**Action:** Replace `purrr::map_lgl` and `ifelse` with vectorized assignments (`res[is.na(x)] <- NA`) and highly optimized base R operations like `lengths(x) == 0L` when processing large vectors or lists. This provides significant speedups.
