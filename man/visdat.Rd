@@ -25,6 +25,11 @@ Learn more about visdat at \url{https://docs.ropensci.org/visdat/}
 \author{
 \strong{Maintainer}: Nicholas Tierney \email{nicholas.tierney@gmail.com} (\href{https://orcid.org/0000-0003-1460-8722}{ORCID})
 
+Authors:
+\itemize{
+  \item Nicholas Tierney \email{nicholas.tierney@gmail.com} (\href{https://orcid.org/0000-0003-1460-8722}{ORCID})
+}
+
 Other contributors:
 \itemize{
   \item Sean Hughes (\href{https://orcid.org/0000-0002-9409-9405}{ORCID}) (Sean Hughes reviewed the package for rOpenSci, see https://github.com/ropensci/onboarding/issues/87) [reviewer]
