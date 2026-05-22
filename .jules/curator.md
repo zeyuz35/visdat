@@ -1,0 +1,3 @@
+## 2024-05-22 - Safe name evaluation for time-series objects
+**Learning:** When evaluating names in time-series objects (e.g., ts, mts), names(x) or colnames(x) may return a vector of length > 1. Passing this to nzchar() produces a logical vector, which throws an error ("length > 1 in coercion to logical(1)") when used in an if condition in R (>= 4.2.0). Additionally, nzchar(NA) evaluates to TRUE.
+**Action:** Verify the length (e.g., if (length(x) > 1L) x <- NULL) and safely evaluate single elements with !is.null(x) && !is.na(x[1]) && nzchar(x[1]) rather than blindly extracting the first element, which can cause semantic data corruption.
