@@ -341,8 +341,7 @@ test_if_all_numeric <- function(data) {
       c(
         "Data input can only contain numeric values",
         "Please subset the data to the numeric values you would like.",
-        "{.code dplyr::select(<data>, where(is.numeric))}",
-        "Can be helpful here!"
+        "Using {.code dplyr::select(<data>, where(is.numeric))} may be helpful."
       )
     )
   }
