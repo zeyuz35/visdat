@@ -518,7 +518,7 @@ ts_to_df <- function(x) {
         series_name <- measure_vars
       }
     }
-    if (!is.null(series_name) && nzchar(series_name)) {
+    if (!is.null(series_name) && any(!is.na(series_name) & nzchar(series_name))) {
       names(series_df) <- series_name
     }
   }
