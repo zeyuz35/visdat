@@ -12,23 +12,14 @@
 #'
 fingerprint <- function(x) {
   # is the data missing?
+  cls <- glue::glue_collapse(class(x), sep = "\n")
+  res <- rep(cls, length(x))
   if (!is.list(x)) {
-    ifelse(
-      is.na(x),
-      # yes? Leave as is NA
-      yes = NA,
-      # no? make that value no equal to the class of this cell.
-      no = glue::glue_collapse(class(x), sep = "\n")
-    )
+    res[is.na(x)] <- NA
   } else {
-    ifelse(
-      purrr::map_lgl(x, ~ length(.x) == 0),
-      # yes? Leave as is NA
-      yes = NA,
-      # no? make that value no equal to the class of this cell.
-      no = glue::glue_collapse(class(x), sep = "\n")
-    )
+    res[lengths(x) == 0L] <- NA
   }
+  res
 } # end function
 
 #' Run fingerprint on a dataframe
@@ -419,7 +410,7 @@ fast_n_miss_col <- function(x) colSums(is.na(x))
 
 n_miss_col <- function(data, sort = FALSE) {
   # if no list columns
-  any_list <- any(purrr::map_lgl(data, is.list))
+  any_list <- any(vapply(data, is.list, logical(1)))
   if (!any_list) {
     n_missing_cols <- fast_n_miss_col(data)
   } else if (any_list) {
