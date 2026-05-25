@@ -208,7 +208,7 @@ add_vis_dat_pal <- function(vis_plot, palette) {
     cli::cli_abort(
       c(
         "Palette arguments need to be one of: 'qual', 'cb_safe', or 'default'",
-        "You palette argument was: {.arg {palette}}"
+        "Your palette argument was: {.arg {palette}}"
       )
     )
   } # close else brace
@@ -248,7 +248,7 @@ label_col_missing_pct <- function(x, col_order_index) {
 #'
 #' @return a tibble with two columns `p_miss_lab` and `p_pres_lab`,
 #'   containing the labels to use for present and missing. A dataframe is
-#'   returned because I think it is a good style habit compared to a list.
+#'   returned for stylistic consistency compared to a list.
 #' @noRd
 #' @keywords internal
 #'

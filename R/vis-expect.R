@@ -242,7 +242,7 @@ expect_frame <- function(data, expectation) {
 #'
 #' @return a `tibble` with two columns `p_miss_lab` and `p_pres_lab`,
 #'   containing the labels to use for present and missing. A dataframe is
-#'   returned because I think it is a good style habit compared to a list.
+#'   returned for stylistic consistency compared to a list.
 #' @keywords internal
 #' @noRd
 #'
