@@ -518,8 +518,14 @@ ts_to_df <- function(x) {
         series_name <- measure_vars
       }
     }
-    if (!is.null(series_name) && nzchar(series_name)) {
-      names(series_df) <- series_name
+    if (!is.null(series_name) && any(!is.na(series_name) & nzchar(series_name))) {
+      # Fallback: only assign the first valid name if names(series_df) expects length 1
+      if (length(names(series_df)) == 1L) {
+        valid_names <- series_name[!is.na(series_name) & nzchar(series_name)]
+        names(series_df) <- valid_names[1L]
+      } else {
+        names(series_df) <- series_name
+      }
     }
   }
 
