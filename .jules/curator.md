@@ -1,0 +1,5 @@
+## 2024-05-29 - Safely evaluate names for time-series objects
+
+**Learning:** When evaluating names in multivariate time-series objects (e.g., `mts`), `names(x)` or `colnames(x)` legitimately returns a vector of length > 1. Passing this to `nzchar()` produces a logical vector, which throws an error ('length > 1 in coercion to logical(1)') when used in an `if` condition in R (>= 4.2.0). Additionally, `nzchar(NA)` evaluates to TRUE. When re-assigning names to a dataframe, ensure the length of the new names matches the dataframe's width (e.g., `if (length(names(df)) == length(valid_names))`) to safely handle multivariate objects, or fall back to assigning `valid_names[1L]` if it is a single-column dataframe to avoid dimension mismatch errors.
+
+**Action:** Replace `nzchar(x)` with `any(!is.na(x) & nzchar(x))` for name evaluation. Guard name assignment against length mismatches between the `names()` vector and the columns of the destination dataframe, defaulting to the first element `x[1L]` if there is a single column.
