@@ -13,21 +13,13 @@
 fingerprint <- function(x) {
   # is the data missing?
   if (!is.list(x)) {
-    ifelse(
-      is.na(x),
-      # yes? Leave as is NA
-      yes = NA,
-      # no? make that value no equal to the class of this cell.
-      no = glue::glue_collapse(class(x), sep = "\n")
-    )
+    res <- rep(glue::glue_collapse(class(x), sep = "\n"), length(x))
+    res[is.na(x)] <- NA
+    res
   } else {
-    ifelse(
-      purrr::map_lgl(x, ~ length(.x) == 0),
-      # yes? Leave as is NA
-      yes = NA,
-      # no? make that value no equal to the class of this cell.
-      no = glue::glue_collapse(class(x), sep = "\n")
-    )
+    res <- rep(glue::glue_collapse(class(x), sep = "\n"), length(x))
+    res[lengths(x) == 0L] <- NA
+    res
   }
 } # end function
 
