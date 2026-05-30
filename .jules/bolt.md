@@ -1,0 +1,3 @@
+## 2024-05-30 - Replace ifelse and purrr::map_lgl with base R vectorized assignments
+**Learning:** Using `ifelse` for element-wise replacements and `purrr::map_lgl` with lambdas for checking length incurs significant evaluation overhead in R. Base R vectorized subset assignment and functions like `lengths()` are highly optimized.
+**Action:** Avoid `ifelse()` for element-wise replacements; pre-allocate a result vector and use vectorized subset assignment (e.g., `res[condition] <- NA`). Replace `purrr::map_lgl(x, ~ length(.x) == 0)` with the highly optimized base R equivalent `lengths(x) == 0L`.
