@@ -1,0 +1,3 @@
+## 2024-05-24 - Missing tsbox dependency in DESCRIPTION
+**Learning:** `tsbox` is used in the codebase (e.g., `tsbox::ts_boxable()`, `tsbox::ts_df()`, `tsbox::ts_wide()`) to support time series data types, but it is entirely missing from the DESCRIPTION file. This leads to `R CMD check` warnings or errors if `tsbox` is not installed by chance, and creates a dependency hygiene issue. Moreover, `stringr` is listed in Suggests but is not used anywhere in the `R/` or `tests/` directories.
+**Action:** Add `tsbox` to Imports in `DESCRIPTION` (or Suggests, though it's used extensively in time series methods directly in main functions) and remove unused packages like `stringr` from Suggests to improve dependency hygiene.
