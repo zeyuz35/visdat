@@ -1,0 +1,3 @@
+## 2024-05-27 - Replace `ifelse()` with vectorized assignment and `purrr::map_lgl()` with `vapply()`
+**Learning:** `ifelse()` has evaluation overhead and `purrr::map_lgl()` adds unnecessary dependency overhead when standard base R features like vectorized subsets and `vapply()` exist. The `fingerprint` and `n_miss_col` functions use these legacy patterns.
+**Action:** Refactor `fingerprint` to use pre-allocation/vectorized assignment instead of `ifelse()`, and use `lengths(x) == 0L` instead of `purrr::map_lgl(x, ~ length(.x) == 0)`. Refactor `n_miss_col` to use `vapply(data, is.list, logical(1))` instead of `purrr::map_lgl(data, is.list)`.
