@@ -1,0 +1,4 @@
+## 2024-06-06 - Safe type coercion in name assignment for time series objects
+
+**Learning:** When generating column names from univariate time series objects (e.g. `ts`), `names(x)` can be an array of length `T` (number of time steps) instead of a length-1 string. Applying `nzchar()` to this array returns a logical array. Inside an `if()` statement in R >= 4.2.0, this throws a `'length > 1' in coercion to 'logical(1)'` error. Moreover, `nzchar(NA)` incorrectly returns `TRUE`. Also assigning an array of length > 1 as `names()` to a single-column dataframe causes length mismatch errors.
+**Action:** When safely checking strings, always use `any(!is.na(x) & nzchar(x))`. Before assigning names dynamically derived from array-like indices, ensure the dimensions of the name array matches the target object (e.g. `length(names(series_df)) == length(series_name)`), or subset explicitly (e.g. `series_name[1L]`).
