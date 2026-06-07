@@ -518,8 +518,12 @@ ts_to_df <- function(x) {
         series_name <- measure_vars
       }
     }
-    if (!is.null(series_name) && nzchar(series_name)) {
-      names(series_df) <- series_name
+    if (!is.null(series_name) && any(!is.na(series_name) & nzchar(series_name))) {
+      if (length(series_name) == ncol(series_df)) {
+        names(series_df) <- series_name
+      } else if (ncol(series_df) == 1L) {
+        names(series_df) <- series_name[1L]
+      }
     }
   }
 
