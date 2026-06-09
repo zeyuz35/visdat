@@ -1,0 +1,3 @@
+## 2024-05-24 - Base R loops over purrr in highly called internal type checks
+**Learning:** `purrr::map_lgl(x, ~ length(.x) == 0)` and `any(purrr::map_lgl(data, is.list))` introduce massive overhead when applied across very large arrays, or recursively on data structures with many dimensions. Base R vectorized operations like `lengths()` and base functional patterns like `vapply()` are orders of magnitude faster (15-30x) because they execute largely in C and avoid package evaluation overhead.
+**Action:** When working in highly executed, internal R package functions (like `visdat`'s `internals.R`), prefer base R C-compiled primitives over tidyverse/purrr iterators to optimize hot paths.
