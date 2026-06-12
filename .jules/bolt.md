@@ -1,0 +1,3 @@
+## 2024-06-12 - Replace purrr::map_lgl with Base R for performance
+**Learning:** Checking for list elements in a dataframe using `purrr::map_lgl` with an anonymous function (`purrr::map_lgl(x, ~ length(.x) == 0)`) is significantly slower than using base R `lengths(x) == 0L`. Similarly, `any(purrr::map_lgl(data, is.list))` is slower than `any(vapply(data, is.list, logical(1)))`.
+**Action:** Replace `purrr::map_lgl(x, ~ length(.x) == 0)` with `lengths(x) == 0L` and `any(purrr::map_lgl(data, is.list))` with `any(vapply(data, is.list, logical(1)))` to improve the speed of internal type-checking loops without sacrificing readability.
