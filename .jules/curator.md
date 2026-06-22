@@ -1,0 +1,3 @@
+## 2024-05-24 - Handle nzchar with character vector of length > 1 for names
+**Learning:** `nzchar()` fails when given a character vector of length > 1 in an `if` condition, and blindly re-assigning names can cause dimension mismatch errors when `length(names(df)) != length(series_name)` (such as for `tbl_ts` / tsibble where `measure_vars` may contain multiple names, but only one is extracted).
+**Action:** Use `any(!is.na(x) & nzchar(x))` for safe length > 1 character evaluations in logical conditions, and ensure name lengths match the number of columns before reassignment, falling back to the first name otherwise.
