@@ -1,0 +1,3 @@
+## 2024-05-18 - Replacing `purrr::map_lgl` with Base R Equivalents in Data Type Checking and Logical Coercion
+**Learning:** `purrr::map_lgl(x, ~ length(.x) == 0)` can be optimized with base R's vectorized `lengths(x) == 0L`. Checking types across a list or dataframe with `any(purrr::map_lgl(data, is.list))` can also be modernized and optimized using `any(vapply(data, is.list, logical(1)))`. These changes reduce functional overhead without losing clarity.
+**Action:** Always prefer native iterators and vectorized base R functions such as `lengths()` and `vapply()` over `purrr::map` variants when doing fundamental type/length checking within low-level package internals for performance improvements.
