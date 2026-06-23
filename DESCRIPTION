@@ -43,8 +43,7 @@ Suggests:
     rmarkdown,
     vdiffr,
     spelling,
-    covr,
-    stringr
+    covr
 VignetteBuilder: knitr
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
